@@ -1151,9 +1151,9 @@ with tab_val:
     )
     label_pref = m_c2.radio(
         "Display Labels",
-        ["Key Anchors (Clean)", "All in Cohort", "Hover Only"],
+        ["Curated Landmarks (Clean)", "Hover Only (Zero Clutter)", "Cohort Only"],
         horizontal=True,
-        key="matrix_label_pref",
+        key="matrix_label_style",
     )
 
     all_c = scores["companies"]
@@ -1178,15 +1178,65 @@ with tab_val:
     else:
         active_set = all_tickers
 
-    KEY_ANCHORS = {"NVDA", "AAPL", "AVGO", "WMT", "MSFT", "GOOGL", "META", "TSLA", "INTC", "BA", "TGT", "NKE", "AMD", "PLTR", "CRM", "JPM", "NFLX"}
+    # Curated landmark tickers: exactly 8 non-overlapping market representatives across all 4 quadrants
+    CURATED_LANDMARKS = {
+        "NVDA": "bottom right",   # AI Titan ($3.45T, 1.014x, 84.0) -> pointing down-right
+        "MSFT": "top left",       # Cloud Titan ($3.15T, 1.000x, 88.2) -> pointing up-left
+        "WMT":  "top center",     # Sandbagger Anchor ($670B, 1.175x, 88.5) -> isolated far-right
+        "TSLA": "middle left",    # Mega-cap Volatile ($820B, 0.880x, 68.6) -> isolated mid-left
+        "TGT":  "bottom left",    # Consumer Slippage ($68B, 0.840x, 59.2) -> isolated bottom-left
+        "BA":   "bottom right",   # Industrial Turnaround ($95B, 1.000x, 59.3) -> isolated bottom
+        "INTC": "top left",       # Semis Turnaround ($105B, 0.500x, 62.0) -> isolated far-left
+        "UNH":  "top left",       # Healthcare Leader ($540B, 0.725x, 77.7) -> isolated mid-left
+    }
+
+    # Directional non-colliding positions for cohort members
+    COHORT_LABEL_POSITIONS = {
+        # Mega-cap / Mag 7
+        "MSFT": "top left",
+        "AAPL": "top center",
+        "GOOGL": "top right",
+        "META": "middle right",
+        "AMZN": "bottom left",
+        "NVDA": "bottom right",
+        "TSLA": "middle left",
+        # Semis & Hardware
+        "AVGO": "top left",
+        "AMD": "bottom right",
+        "QCOM": "top right",
+        "MU": "bottom left",
+        "AMAT": "bottom right",
+        "TXN": "middle left",
+        "INTC": "top left",
+        # Enterprise Software
+        "PLTR": "top right",
+        "CRM": "bottom left",
+        "ADBE": "middle left",
+        "ORCL": "bottom right",
+        "NOW": "top center",
+        "PANW": "top left",
+        "CRWD": "bottom left",
+        "SNOW": "middle left",
+        # Retail & Consumer
+        "WMT": "top center",
+        "COST": "top right",
+        "TGT": "bottom left",
+        "HD": "bottom right",
+        "NKE": "bottom left",
+        "SBUX": "top left",
+        "MCD": "bottom left",
+        # Industrials & Turnarounds
+        "BA": "bottom right",
+        "UNH": "top left",
+    }
 
     fig_matrix = go.Figure()
 
-    # Subtle Quadrant Background Fills
-    fig_matrix.add_shape(type="rect", x0=0.65, x1=1.00, y0=80, y1=94, fillcolor="rgba(37, 99, 235, 0.035)", line_width=0, layer="below")
-    fig_matrix.add_shape(type="rect", x0=1.00, x1=1.40, y0=80, y1=94, fillcolor="rgba(5, 150, 105, 0.045)", line_width=0, layer="below")
-    fig_matrix.add_shape(type="rect", x0=0.65, x1=1.00, y0=50, y1=80, fillcolor="rgba(225, 29, 72, 0.040)", line_width=0, layer="below")
-    fig_matrix.add_shape(type="rect", x0=1.00, x1=1.40, y0=50, y1=80, fillcolor="rgba(217, 119, 6, 0.030)", line_width=0, layer="below")
+    # Subtle Quadrant Background Fills (spanning full x range 0.42 to 1.25)
+    fig_matrix.add_shape(type="rect", x0=0.42, x1=1.00, y0=80, y1=95, fillcolor="rgba(37, 99, 235, 0.030)", line_width=0, layer="below")
+    fig_matrix.add_shape(type="rect", x0=1.00, x1=1.25, y0=80, y1=95, fillcolor="rgba(5, 150, 105, 0.035)", line_width=0, layer="below")
+    fig_matrix.add_shape(type="rect", x0=0.42, x1=1.00, y0=52, y1=80, fillcolor="rgba(225, 29, 72, 0.030)", line_width=0, layer="below")
+    fig_matrix.add_shape(type="rect", x0=1.00, x1=1.25, y0=52, y1=80, fillcolor="rgba(217, 119, 6, 0.025)", line_width=0, layer="below")
 
     # Boundary Crosshairs
     fig_matrix.add_hline(y=80, line=dict(color="#CBD5E1", dash="dash", width=1.4))
@@ -1194,28 +1244,32 @@ with tab_val:
 
     # Corner Watermark Badges (positioned cleanly in empty quadrant margins away from data)
     fig_matrix.add_annotation(
-        x=1.38, y=92.5,
-        text="<b>🟢 CONSERVATIVE SANDBAGGERS</b><br><span style='font-size:9.5px;color:#047857;'>Beat-and-Raise Cadence (Ratio > 1.0×, Grade A)</span>",
-        showarrow=False, align="right", font=dict(family="Inter", size=10.5, color=EMERALD),
-        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#A7F3D0", borderpad=5,
+        x=1.24, y=94.5,
+        text="<b>🟢 CONSERVATIVE SANDBAGGERS</b><br><span style='font-size:9.5px;color:#047857;'>Beat-and-Raise Cadence (Ratio > 1.0× · Grade A)</span>",
+        showarrow=False, align="right", xanchor="right", yanchor="top",
+        font=dict(family="Inter", size=10, color=EMERALD),
+        bgcolor="rgba(255, 255, 255, 0.88)", bordercolor="#D1FAE5", borderpad=5,
     )
     fig_matrix.add_annotation(
-        x=0.67, y=92.5,
-        text="<b>🔵 DISCIPLINED COMPOUNDERS</b><br><span style='font-size:9.5px;color:#1D4ED8;'>Predictable Execution (Ratio ≤ 1.0×, Grade A)</span>",
-        showarrow=False, align="left", font=dict(family="Inter", size=10.5, color=COBALT),
-        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#BFDBFE", borderpad=5,
+        x=0.43, y=94.5,
+        text="<b>🔵 DISCIPLINED COMPOUNDERS</b><br><span style='font-size:9.5px;color:#1D4ED8;'>Predictable Execution (Ratio ≤ 1.0× · Grade A)</span>",
+        showarrow=False, align="left", xanchor="left", yanchor="top",
+        font=dict(family="Inter", size=10, color=COBALT),
+        bgcolor="rgba(255, 255, 255, 0.88)", bordercolor="#DBEAFE", borderpad=5,
     )
     fig_matrix.add_annotation(
-        x=0.67, y=52.5,
-        text="<b>🔴 HABITUAL OVER-PROMISERS</b><br><span style='font-size:9.5px;color:#BE123C;'>Guidance Slippage Risk (Ratio < 1.0×, Grade C)</span>",
-        showarrow=False, align="left", font=dict(family="Inter", size=10.5, color=ROSE),
-        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#FECDD3", borderpad=5,
+        x=0.43, y=52.5,
+        text="<b>🔴 HABITUAL OVER-PROMISERS</b><br><span style='font-size:9.5px;color:#BE123C;'>Guidance Slippage Risk (Ratio < 1.0× · Grade C)</span>",
+        showarrow=False, align="left", xanchor="left", yanchor="bottom",
+        font=dict(family="Inter", size=10, color=ROSE),
+        bgcolor="rgba(255, 255, 255, 0.88)", bordercolor="#FFE4E6", borderpad=5,
     )
     fig_matrix.add_annotation(
-        x=1.38, y=52.5,
-        text="<b>🟠 VOLATILE / MIXED DELIVERY</b><br><span style='font-size:9.5px;color:#B45309;'>Uncertain Conversion (Ratio ≥ 1.0×, Grade B/C)</span>",
-        showarrow=False, align="right", font=dict(family="Inter", size=10.5, color=AMBER),
-        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#FDE68A", borderpad=5,
+        x=1.24, y=52.5,
+        text="<b>🟠 VOLATILE / MIXED DELIVERY</b><br><span style='font-size:9.5px;color:#B45309;'>Uncertain Conversion (Ratio ≥ 1.0× · Grade B/C)</span>",
+        showarrow=False, align="right", xanchor="right", yanchor="bottom",
+        font=dict(family="Inter", size=10, color=AMBER),
+        bgcolor="rgba(255, 255, 255, 0.88)", bordercolor="#FEF3C7", borderpad=5,
     )
 
     # Prepare Points with Deterministic Visual Jitter on x=1.00
@@ -1227,19 +1281,27 @@ with tab_val:
         raw_x = c["delivery_ratio"]
         # Small deterministic visual offset for exact 1.00 collisions
         if abs(raw_x - 1.00) < 0.005:
-            vis_x = round(raw_x + ((hash(t) % 11) - 5) * 0.006, 4)
+            seed = sum(ord(ch) * (idx + 1) for idx, ch in enumerate(t))
+            vis_x = round(raw_x + ((seed % 11) - 5) * 0.005, 4)
         else:
             vis_x = raw_x
 
         is_active = t in active_set
 
-        # Determine label
-        if label_pref == "Hover Only":
+        # Determine label text and directional non-colliding position
+        if "Hover Only" in label_pref:
             txt = ""
-        elif label_pref == "All in Cohort":
+            pos = "top center"
+        elif "Cohort Only" in label_pref:
             txt = t if is_active else ""
-        else:  # Key Anchors
-            txt = t if (t in KEY_ANCHORS and is_active) else ""
+            pos = COHORT_LABEL_POSITIONS.get(t, "top center")
+        else:  # Curated Landmarks (Clean)
+            if filter_cohort == "All 50 US Titans":
+                txt = t if t in CURATED_LANDMARKS else ""
+                pos = CURATED_LANDMARKS.get(t, "top center")
+            else:
+                txt = t if is_active else ""
+                pos = COHORT_LABEL_POSITIONS.get(t, "top center")
 
         pt_dict = {
             "vis_x": vis_x,
@@ -1250,9 +1312,10 @@ with tab_val:
             "sector": c["sector"],
             "grade": c["grade"],
             "market_cap": c["market_cap"],
-            "size": max(10, min(26, int(10 + (c["market_cap"] ** 0.35)))),
+            "size": max(8, min(22, int(8 + (c["market_cap"] ** 0.32)))),
             "color": grade_color(c["grade"]),
             "text": txt,
+            "pos": pos,
         }
         if is_active:
             pts_highlight.append(pt_dict)
@@ -1266,9 +1329,9 @@ with tab_val:
             y=[p["y"] for p in pts_dimmed],
             mode="markers",
             marker=dict(
-                size=[p["size"] - 2 for p in pts_dimmed],
-                color="rgba(203, 213, 225, 0.65)",
-                line=dict(color="#FFFFFF", width=1.0),
+                size=[max(6, p["size"] - 3) for p in pts_dimmed],
+                color="rgba(203, 213, 225, 0.45)",
+                line=dict(color="#FFFFFF", width=0.8),
             ),
             customdata=[[p["ticker"], p["name"], p["sector"], p["grade"], p["raw_x"], p["market_cap"]] for p in pts_dimmed],
             hovertemplate=(
@@ -1289,13 +1352,13 @@ with tab_val:
             y=[p["y"] for p in pts_highlight],
             mode="markers+text" if has_text else "markers",
             text=[p["text"] for p in pts_highlight],
-            textposition="top center",
-            textfont=dict(family="JetBrains Mono", size=11, color="#0F172A"),
+            textposition=[p["pos"] for p in pts_highlight],
+            textfont=dict(family="JetBrains Mono", size=10.5, color="#0F172A"),
             marker=dict(
                 size=[p["size"] for p in pts_highlight],
                 color=[p["color"] for p in pts_highlight],
-                line=dict(color="#FFFFFF", width=1.8),
-                opacity=0.92,
+                line=dict(color="#FFFFFF", width=1.5),
+                opacity=0.90,
             ),
             customdata=[[p["ticker"], p["name"], p["sector"], p["grade"], p["raw_x"], p["market_cap"]] for p in pts_highlight],
             hovertemplate=(
@@ -1310,14 +1373,15 @@ with tab_val:
 
     style_fig(
         fig_matrix,
-        h=520,
+        h=500,
+        margin=dict(l=55, r=30, t=25, b=45),
         xaxis_title="Revenue Delivery Ratio (Reported ÷ Guided Midpoint) →",
         yaxis_title="Say-Do Credibility Score (0–100) →",
-        xaxis_range=[0.65, 1.40],
-        yaxis_range=[50, 94],
+        xaxis_range=[0.42, 1.25],
+        yaxis_range=[52, 95],
         showlegend=False,
     )
-    st.plotly_chart(fig_matrix, use_container_width=True, key="chart_val_matrix")
+    st.plotly_chart(fig_matrix, use_container_width=True, key="chart_val_matrix", config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
 
     v1, v2 = st.columns(2, gap="large")
@@ -1341,24 +1405,110 @@ with tab_val:
                 hovertemplate="<b>Predicted:</b> %{x:.1f}%<br><b>Observed:</b> %{y:.1f}%<extra></extra>",
             ))
             style_fig(fig_cal, h=320, xaxis_title="Mean Predicted Probability (%)", yaxis_title="Observed Full Delivery Rate (%)", xaxis_range=[0, 100], yaxis_range=[0, 100], showlegend=True)
-            st.plotly_chart(fig_cal, use_container_width=True, key="chart_val_calib")
+            st.plotly_chart(fig_cal, use_container_width=True, key="chart_val_calib", config={"displayModeBar": False})
         st.markdown("</div>", unsafe_allow_html=True)
 
     with v2:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">2 · Top Feature Importances (Log-Odds Impact)</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">Coefficients in the calibrated Bayesian MAP classifier</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-caption">Institutional breakdown of positive and negative predictive drivers in Calibrated Bayesian MAP Kernel</div>', unsafe_allow_html=True)
+
+        FEATURE_DISPLAY = {
+            "cat_kept_shrunk": {
+                "label": "Historical Delivery Track Record",
+                "sub": "Past category beat rate shrunk towards market prior (+3.79)",
+            },
+            "ops_spread": {
+                "label": "Ops vs Financial Margin Spread",
+                "sub": "Divergence between operating targets and cash delivery (-2.63)",
+            },
+            "firm": {
+                "label": "High-Conviction Tone ('Committed / Will')",
+                "sub": "Definite C-suite commitment phrasing on earnings call (+1.99)",
+            },
+            "has_conditions": {
+                "label": "External Macro / Supply Caveats",
+                "sub": "Conditional guidance language predicts future cuts (-0.85)",
+            },
+            "hedged_or_aspirational": {
+                "label": "Tentative Phrasing ('Hope / Endeavor')",
+                "sub": "Aspirational or vague management remarks (-0.79)",
+            },
+            "grp_commercial": {
+                "label": "Commercial Milestones (Backlog / Deals)",
+                "sub": "Lumpy contract signings face timing uncertainty (-0.43)",
+            },
+            "grp_build": {
+                "label": "Capex & Fab Ramp Milestones",
+                "sub": "Physical supply chain and facility buildout friction (-0.42)",
+            },
+            "grp_fin": {
+                "label": "Core Financial Targets (Rev / EPS)",
+                "sub": "Baseline revenue and margin guidance ranges (-0.41)",
+            },
+            "role_leader": {
+                "label": "CEO vs Divisional Exec Guidance",
+                "sub": "Accountability level of the speaker on the call (-0.23)",
+            },
+            "has_number": {
+                "label": "Quantified Target ($ or %)",
+                "sub": "Numerical precision vs vague directional language (+0.21)",
+            },
+            "has_range": {
+                "label": "Bounded Guidance Bracket (Min–Max)",
+                "sub": "Explicit bracket range cushions single-point miss (+0.21)",
+            },
+            "horizon_q": {
+                "label": "Extended Multi-Quarter Horizon",
+                "sub": "Long-dated forecasts decay in accuracy over time (-0.15)",
+            },
+            "n_hedges": {
+                "label": "Hedge Word Density in Guidance Call",
+                "sub": "Frequency of qualifier words in executive remarks (-0.01)",
+            },
+            "ghost_rate": {
+                "label": "Guidance Omission / Ghosting Rate",
+                "sub": "Frequency of unaddressed metrics in subsequent calls (0.00)",
+            },
+        }
 
         fw = model.get("feature_weights", [])[:7]
+        display_labels = [
+            FEATURE_DISPLAY.get(f["feature"], {}).get("label", f["feature"])
+            for f in reversed(fw)
+        ]
+        sub_descriptions = [
+            FEATURE_DISPLAY.get(f["feature"], {}).get("sub", "")
+            for f in reversed(fw)
+        ]
+        weights = [f["weight"] for f in reversed(fw)]
+        colors = [EMERALD if w > 0 else ROSE for w in weights]
+        text_labels = [f"{w:+.2f}" for w in weights]
+
         fig_feat = go.Figure(go.Bar(
-            x=[f["weight"] for f in reversed(fw)],
-            y=[f["feature"] for f in reversed(fw)],
+            x=weights,
+            y=display_labels,
             orientation="h",
-            marker=dict(color=[EMERALD if f["weight"] > 0 else ROSE for f in reversed(fw)]),
-            hovertemplate="<b>%{y}</b>: %{x:+.2f}<extra></extra>",
+            marker=dict(color=colors, line=dict(color="#FFFFFF", width=1.0)),
+            text=text_labels,
+            textposition="auto",
+            textfont=dict(family="JetBrains Mono", size=10.5, color="#FFFFFF"),
+            customdata=sub_descriptions,
+            hovertemplate=(
+                "<b>%{y}</b><br>"
+                "<span style='color:#64748B;'>%{customdata}</span><br>"
+                "<b>Log-Odds Impact:</b> %{x:+.2f}<extra></extra>"
+            ),
         ))
-        style_fig(fig_feat, h=320, xaxis_title="Weight in Linear Kernel (Log-Odds)", showlegend=False)
-        st.plotly_chart(fig_feat, use_container_width=True, key="chart_val_feat")
+        style_fig(
+            fig_feat,
+            h=330,
+            margin=dict(l=230, r=30, t=15, b=35),
+            xaxis_title="Weight in Linear Kernel (Log-Odds Impact) →",
+            showlegend=False,
+        )
+        fig_feat.update_layout(yaxis=dict(tickfont=dict(size=10.5, family="Inter", color="#334155")))
+        st.plotly_chart(fig_feat, use_container_width=True, key="chart_val_feat", config={"displayModeBar": False})
         st.markdown("</div>", unsafe_allow_html=True)
 
     # Market Event Study
@@ -1381,5 +1531,5 @@ with tab_val:
             hovertemplate="<b>Day %{x}:</b> %{y:.2f}% excess<extra></extra>",
         ))
         style_fig(fig_drift, h=320, xaxis_title="Trading Days Relative to Concall (Day 0 = Announcement)", yaxis_title="Cumulative Abnormal Return (%)", showlegend=True)
-        st.plotly_chart(fig_drift, use_container_width=True, key="chart_val_drift")
+        st.plotly_chart(fig_drift, use_container_width=True, key="chart_val_drift", config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
