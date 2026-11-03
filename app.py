@@ -423,32 +423,62 @@ with st.sidebar:
     st.markdown("### 🎯 RevCall Configuration")
     st.caption("Meta Global AI Hackathon Edition")
 
-    meta_model_choice = st.selectbox(
-        "Meta AI Model (Meta Model API)",
-        [
-            "muse-spark-1.3 (Meta Reasoning & Code)",
-            "muse-spark-1.2 (Fast Reasoning)",
-            "llama-3.3-70b-instruct (Meta Open-Weights)",
-            "llama-3.1-405b-instruct (Frontier Scale)",
-        ],
-        index=0,
-        key="sb_meta_model",
-    )
-    selected_model_id = meta_model_choice.split()[0]
+    selected_model_id = "muse-spark-1.3"
 
-    user_api_key = st.text_input(
-        "Meta Model API Key",
-        value="",
-        type="password",
-        placeholder="Enter META_API_KEY / MUSE_API_KEY...",
-        help="Optional: Pre-computed forensic memos and predictions are active for all 50 titans. Enter your key to run live dynamic Meta Muse synthesis.",
-        key="sb_meta_key",
-    )
-    active_meta_key = meta_api.resolve_meta_api_key(user_api_key)
-    if active_meta_key:
-        st.success(f"🟢 Meta Model API Active (`{selected_model_id}`)")
+    # Automatically resolve secret key from Streamlit Settings (st.secrets) or environment
+    secret_key, key_source = meta_api.get_configured_secret_key()
+
+    if secret_key:
+        active_meta_key = secret_key
+        st.markdown(
+            f"""
+            <div style="padding:11px 14px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px;margin-bottom:12px;">
+                <div style="font-size:12px;font-weight:700;color:#065F46;">🟢 Meta Model API Connected</div>
+                <div style="font-size:11.5px;color:#047857;margin-top:2px;">Loaded from <code>{key_source}</code></div>
+                <div style="font-size:11.5px;color:#0F172A;margin-top:4px;font-weight:600;">Engine: Meta Muse (<code>{selected_model_id}</code>)</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        with st.expander("⚙️ Advanced Model & Key Settings", expanded=False):
+            model_opt = st.radio(
+                "Model",
+                ["muse-spark-1.3 (Flagship)", "muse-spark-1.2", "llama-3.3-70b-instruct"],
+                index=0,
+                key="sb_model_override",
+            )
+            selected_model_id = model_opt.split()[0]
+            user_override = st.text_input(
+                "Override API Key",
+                value="",
+                type="password",
+                placeholder="Leave blank to use settings secret",
+                key="sb_key_override",
+            )
+            if user_override.strip():
+                active_meta_key = user_override.strip()
     else:
-        st.info("⚡ Instant Pre-Computed Mode Active (50 Titans Ready) · Enter key for live Meta Muse generation")
+        st.markdown(
+            """
+            <div style="padding:11px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;margin-bottom:12px;">
+                <div style="font-size:12px;font-weight:700;color:#92400E;">🟡 Meta Model API Key</div>
+                <div style="font-size:11.5px;color:#78350F;margin-top:2px;">Add <code>META_API_KEY</code> in Streamlit Cloud <b>Settings &gt; Secrets</b> to enable live generation.</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        user_input_key = st.text_input(
+            "Paste Meta Model API Key",
+            value="",
+            type="password",
+            placeholder="Paste META_API_KEY / MUSE_API_KEY...",
+            key="sb_manual_key",
+        )
+        active_meta_key = user_input_key.strip() if user_input_key.strip() else None
+        if active_meta_key:
+            st.success(f"🟢 Meta Model API Active (`{selected_model_id}`)")
+        else:
+            st.info("⚡ Instant Pre-Computed Mode Active (50 Titans Ready)")
 
     st.markdown("---")
     st.markdown("**Core Algorithms**")
@@ -654,7 +684,7 @@ with tab_pred:
                 quote=g_quote,
                 p_held=p_kept,
                 adj_target=f"${adj_target:.2f}B",
-                api_key=user_api_key,
+                api_key=active_meta_key,
                 model=selected_model_id,
             )
             if b_res["success"]:
@@ -886,7 +916,7 @@ with tab_co:
 
     if run_meta_memo:
         with st.spinner(f"Querying Meta Model API ({selected_model_id}) for {co_sel}..."):
-            api_res = meta_api.generate_meta_memo(co_sel, c_info, c_info, c_promises, api_key=user_api_key, model=selected_model_id)
+            api_res = meta_api.generate_meta_memo(co_sel, c_info, c_info, c_promises, api_key=active_meta_key, model=selected_model_id)
             if api_res["success"]:
                 st.markdown(
                     f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #BFDBFE;border-left:4px solid #2563EB;border-radius:10px;margin:12px 0;">'

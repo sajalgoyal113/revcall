@@ -10,7 +10,7 @@ import json
 import os
 import requests
 
-META_MODEL_BASE_URL = os.environ.get("META_MODEL_BASE_URL", "https://api.meta.ai/v1")
+DEFAULT_META_BASE_URL = "https://api.meta.ai/v1"
 DEFAULT_META_MODEL = "muse-spark-1.3"
 
 AVAILABLE_META_MODELS = [
@@ -23,28 +23,75 @@ AVAILABLE_META_MODELS = [
 ]
 
 
+def get_configured_secret_key():
+    """Detects any Meta API key from Streamlit secrets or environment variables.
+
+    Returns:
+        tuple: (api_key_str or None, source_str or None)
+    """
+    # 1. Check Streamlit secrets (all casing and common key variants)
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets"):
+            candidate_keys = [
+                "META_API_KEY", "MUSE_API_KEY", "MODEL_API_KEY", "META_MODEL_API_KEY",
+                "meta_api_key", "muse_api_key", "model_api_key", "meta_model_api_key",
+                "META_KEY", "MUSE_KEY", "meta_key", "muse_key",
+                "API_KEY", "api_key", "KEY", "key",
+            ]
+            for k in candidate_keys:
+                if k in st.secrets and str(st.secrets[k]).strip():
+                    return str(st.secrets[k]).strip(), f"st.secrets['{k}']"
+
+            # Check nested sections like [meta], [muse], [meta_ai], [model]
+            for section in ("meta", "muse", "meta_ai", "model", "meta_model"):
+                if section in st.secrets and isinstance(st.secrets[section], dict):
+                    sec = st.secrets[section]
+                    for subk in ("api_key", "API_KEY", "key", "KEY", "token", "TOKEN"):
+                        if subk in sec and str(sec[subk]).strip():
+                            return str(sec[subk]).strip(), f"st.secrets['{section}']['{subk}']"
+
+            # Fallback scan all keys in st.secrets for any non-empty string containing meta/muse/key
+            for k, val in st.secrets.items():
+                if isinstance(val, str) and len(val.strip()) >= 8:
+                    k_lower = k.lower()
+                    if any(w in k_lower for w in ("meta", "muse", "model", "key", "token")):
+                        return str(val).strip(), f"st.secrets['{k}']"
+    except Exception:
+        pass
+
+    # 2. Check environment variables
+    env_keys = [
+        "META_API_KEY", "MUSE_API_KEY", "MODEL_API_KEY", "META_MODEL_API_KEY",
+        "meta_api_key", "muse_api_key", "model_api_key", "meta_model_api_key",
+    ]
+    for k in env_keys:
+        v = os.environ.get(k)
+        if v and v.strip():
+            return v.strip(), f"env:{k}"
+
+    return None, None
+
+
 def resolve_meta_api_key(explicit_key=None):
     """Resolves the Meta Model API key from user input, Streamlit secrets, or environment."""
     if explicit_key and str(explicit_key).strip():
         return str(explicit_key).strip()
+    sec_key, _ = get_configured_secret_key()
+    return sec_key
 
-    # Try Streamlit secrets if running inside Streamlit
+
+def get_meta_base_url():
+    """Resolves the Meta Model API base URL."""
     try:
         import streamlit as st
         if hasattr(st, "secrets"):
-            for k in ("META_API_KEY", "MUSE_API_KEY", "MODEL_API_KEY", "META_MODEL_API_KEY"):
+            for k in ("META_MODEL_BASE_URL", "META_BASE_URL", "BASE_URL"):
                 if k in st.secrets and st.secrets[k]:
-                    return str(st.secrets[k]).strip()
+                    return str(st.secrets[k]).strip().rstrip("/")
     except Exception:
         pass
-
-    # Try environment variables
-    for k in ("META_API_KEY", "MUSE_API_KEY", "MODEL_API_KEY", "META_MODEL_API_KEY"):
-        val = os.environ.get(k)
-        if val and val.strip():
-            return val.strip()
-
-    return None
+    return os.environ.get("META_MODEL_BASE_URL", DEFAULT_META_BASE_URL).rstrip("/")
 
 
 def call_meta_model(prompt, system_prompt=None, model=DEFAULT_META_MODEL, api_key=None, max_tokens=1200, temperature=0.2):
@@ -59,10 +106,11 @@ def call_meta_model(prompt, system_prompt=None, model=DEFAULT_META_MODEL, api_ke
             "success": False,
             "content": "",
             "model": model,
-            "error": "No Meta Model API Key found. Set META_API_KEY, MUSE_API_KEY, or MODEL_API_KEY in the sidebar or environment."
+            "error": "No Meta Model API Key found in Streamlit Secrets or environment. Please add META_API_KEY in Streamlit Cloud Settings > Secrets."
         }
 
-    url = f"{META_MODEL_BASE_URL.rstrip('/')}/chat/completions"
+    base_url = get_meta_base_url()
+    url = f"{base_url}/chat/completions"
     headers = {
         "Authorization": f"Bearer {key}",
         "Content-Type": "application/json",
@@ -156,8 +204,7 @@ Synthesize a structured institutional audit memo in Markdown with these 4 sectio
 (Specific guidance metrics, margin hurdles, or capex commitments analysts should cross-examine on the next call.)
 """
 
-    res = call_meta_model(user_prompt, system_prompt=system_prompt, model=model, api_key=api_key)
-    return res
+    return call_meta_model(user_prompt, system_prompt=system_prompt, model=model, api_key=api_key)
 
 
 def generate_meta_guidance_analysis(ticker, company_info, guided_cat, guided_val, horizon, firmness, quote, p_held, adj_target, api_key=None, model=DEFAULT_META_MODEL):
