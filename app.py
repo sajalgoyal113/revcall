@@ -579,45 +579,47 @@ with tab_pred:
     tickers_list = sorted([c["ticker"] for c in scores["companies"]])
 
     # Session state initialization for chosen ticker
-    if "pred_active_ticker" not in st.session_state:
-        st.session_state["pred_active_ticker"] = "NVDA"
+    if "selected_ticker" not in st.session_state:
+        st.session_state["selected_ticker"] = "NVDA"
 
     # Quick Ticker Selection Row
     st.markdown('<div style="font-size:12px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">⚡ Quick Select Mega-Cap Leaders</div>', unsafe_allow_html=True)
     popular_quick = ["NVDA", "MSFT", "AAPL", "GOOGL", "AMZN", "META", "TSLA", "PLTR", "AMD", "INTC"]
     q_cols = st.columns(len(popular_quick))
     for i, q_sym in enumerate(popular_quick):
-        is_active = (st.session_state["pred_active_ticker"] == q_sym)
+        is_active = (st.session_state["selected_ticker"] == q_sym)
         btn_type = "primary" if is_active else "secondary"
         if q_cols[i].button(q_sym, key=f"qbtn_{q_sym}", type=btn_type, use_container_width=True):
-            st.session_state["pred_active_ticker"] = q_sym
+            st.session_state["selected_ticker"] = q_sym
             st.rerun()
-
-    # Searchable Selectbox synced with session state
-    curr_index = tickers_list.index(st.session_state["pred_active_ticker"]) if st.session_state["pred_active_ticker"] in tickers_list else 0
 
     def format_co_option(t):
         info = by_t.get(t, {})
         return f"{t} — {info.get('name', t)} ({info.get('sector', 'Tech')} · ${info.get('market_cap', 0):,}B)"
+
+    curr_index = tickers_list.index(st.session_state["selected_ticker"]) if st.session_state["selected_ticker"] in tickers_list else 0
 
     chosen_ticker = st.selectbox(
         "Select US Stock to Audit",
         tickers_list,
         index=curr_index,
         format_func=format_co_option,
-        key="pred_chosen_ticker_box",
+        key=f"box_select_{st.session_state['selected_ticker']}",
     )
-    if chosen_ticker != st.session_state["pred_active_ticker"]:
-        st.session_state["pred_active_ticker"] = chosen_ticker
+    if chosen_ticker != st.session_state["selected_ticker"]:
+        st.session_state["selected_ticker"] = chosen_ticker
         st.rerun()
 
-    chosen_ticker = st.session_state["pred_active_ticker"]
+    chosen_ticker = st.session_state["selected_ticker"]
     co_info = by_t.get(chosen_ticker, {})
     co_grade = co_info.get("grade", "A")
     c_proms = [p for p in resolved if p["ticker"] == chosen_ticker]
     c_proms_sorted = sorted(c_proms, key=lambda x: x.get("call_date", ""), reverse=True)
-    latest_prom = c_proms_sorted[0] if c_proms_sorted else {}
-    past_incidents = c_proms_sorted[1:] if len(c_proms_sorted) > 1 else c_proms_sorted
+
+    # Point-in-time latest 2026 earnings call forward guidance
+    latest_prom = meta_api.get_latest_concall_guidance(chosen_ticker, default_promise=c_proms_sorted[0] if c_proms_sorted else {})
+    # Historical quarters with audited SEC 10-Q deliveries
+    past_incidents = c_proms_sorted
 
     deliv_ratio = co_info.get("delivery_ratio", 1.0)
     score_val = co_info.get("score", 75.0)
@@ -781,7 +783,14 @@ with tab_pred:
                 st.session_state[cache_key_brief] = b_res
 
         b_res = st.session_state[cache_key_brief]
+        brief_text = b_res.get("content")
         is_live = b_res.get("is_live", False)
+        if not brief_text or str(brief_text).strip().lower() in ("none", "null", ""):
+            brief_text = meta_api._synthesize_deterministic_reliability_brief(
+                chosen_ticker, co_info, co_info, latest_prom, past_incidents, web_intel
+            )
+            is_live = False
+
         status_tag = f"🟢 LIVE META MODEL API ({selected_model_id})" if is_live else f"⚡ VERIFIED SEC 10-Q FORENSIC AUDIT (Pre-Computed · {selected_model_id})"
         tag_color = "#047857" if is_live else "#1E40AF"
         tag_bg = "#ECFDF5" if is_live else "#EFF6FF"
@@ -792,11 +801,11 @@ with tab_pred:
         )
 
         st.markdown(
-            f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #E2E8F0;border-left:4px solid {tag_color};border-radius:10px;max-height:480px;overflow-y:auto;font-size:13.5px;line-height:1.6;">'
-            f'{b_res.get("content", "")}'
-            f'</div>',
+            f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #E2E8F0;border-left:4px solid {tag_color};border-radius:10px;max-height:520px;overflow-y:auto;font-size:13.5px;line-height:1.6;">',
             unsafe_allow_html=True,
         )
+        st.markdown(brief_text)
+        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
     # 3. Audited Past Guidance Incidents Ledger (The Historical Evidence)

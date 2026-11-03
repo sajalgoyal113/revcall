@@ -133,14 +133,45 @@ def call_meta_model(prompt, system_prompt=None, model=DEFAULT_META_MODEL, api_ke
         response = requests.post(url, headers=headers, json=payload, timeout=25)
         if response.status_code == 200:
             data = response.json()
-            content = data["choices"][0]["message"]["content"]
-            return {
-                "success": True,
-                "content": content,
-                "model": model,
-                "error": None,
-                "usage": data.get("usage", {}),
-            }
+            content = None
+            if "choices" in data and len(data["choices"]) > 0:
+                choice = data["choices"][0]
+                msg = choice.get("message", {})
+                if isinstance(msg, dict):
+                    raw_c = msg.get("content")
+                    if isinstance(raw_c, str) and raw_c.strip():
+                        content = raw_c.strip()
+                    elif isinstance(raw_c, list):
+                        content = "".join(
+                            p.get("text", "") if isinstance(p, dict) else str(p)
+                            for p in raw_c
+                        ).strip()
+                    elif "text" in msg and str(msg["text"]).strip():
+                        content = str(msg["text"]).strip()
+                if not content and "text" in choice and str(choice["text"]).strip():
+                    content = str(choice["text"]).strip()
+            if not content and "output" in data:
+                content = data["output"].get("text") or str(data["output"])
+            if not content and "content" in data:
+                content = str(data["content"])
+            if not content and "response" in data:
+                content = str(data["response"])
+
+            if content and str(content).strip() and str(content).strip().lower() != "none":
+                return {
+                    "success": True,
+                    "content": str(content).strip(),
+                    "model": model,
+                    "error": None,
+                    "usage": data.get("usage", {}),
+                }
+            else:
+                return {
+                    "success": False,
+                    "content": "",
+                    "model": model,
+                    "error": "Empty or null content returned from Meta Model API.",
+                }
         else:
             return {
                 "success": False,
@@ -434,10 +465,11 @@ Deliver a structured institutional report in Markdown with these 4 distinct sect
 (Direct portfolio managers on how to position around this guidance and what exact numbers to check on the next 10-Q.)
 """
         api_res = call_meta_model(user_prompt, system_prompt=system_prompt, model=model, api_key=key)
-        if api_res.get("success"):
+        live_content = api_res.get("content")
+        if api_res.get("success") and live_content and str(live_content).strip() and str(live_content).strip().lower() != "none":
             return {
                 "success": True,
-                "content": api_res["content"],
+                "content": str(live_content).strip(),
                 "is_live": True,
                 "model": model,
                 "web_articles": web_articles or [],
@@ -454,3 +486,17 @@ Deliver a structured institutional report in Markdown with these 4 distinct sect
         "model": model,
         "web_articles": web_articles or [],
     }
+
+
+def get_latest_concall_guidance(ticker, default_promise=None):
+    """Retrieves the authentic latest 2026 quarterly earnings call guidance statement for a ticker."""
+    try:
+        from data.latest_2026_calls import LATEST_2026_GUIDANCE
+        if ticker in LATEST_2026_GUIDANCE:
+            data = dict(LATEST_2026_GUIDANCE[ticker])
+            data["ticker"] = ticker
+            return data
+    except Exception:
+        pass
+    return default_promise or {}
+

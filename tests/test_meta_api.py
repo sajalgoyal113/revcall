@@ -72,6 +72,40 @@ class TestMetaAPI(unittest.TestCase):
             )
             self.assertIn(expected_archetype, res["content"])
 
+    def test_get_latest_concall_guidance(self):
+        """Latest concall guidance must return 2026 dates and guidance figures for key titans."""
+        nvda = meta_api.get_latest_concall_guidance("NVDA")
+        self.assertIn("2026", nvda["call_date"])
+        self.assertEqual(nvda["period"], "Q3 FY27")
+        self.assertGreaterEqual(nvda["value_high"], 54.0)
+
+        tsla = meta_api.get_latest_concall_guidance("TSLA")
+        self.assertIn("2026", tsla["call_date"])
+        self.assertEqual(tsla["period"], "FY2026")
+
+        msft = meta_api.get_latest_concall_guidance("MSFT")
+        self.assertIn("2026", msft["call_date"])
+        self.assertEqual(msft["period"], "Q2 FY27")
+
+    def test_no_none_content_guarantee(self):
+        """Content returned must never be None or 'None' string."""
+        ticker = "TSLA"
+        c_meta = self.companies[ticker]
+        c_score = self.scores[ticker]
+        latest = meta_api.get_latest_concall_guidance(ticker)
+        res = meta_api.generate_meta_concall_reliability_brief(
+            ticker=ticker,
+            company_meta=c_meta,
+            company_score=c_score,
+            latest_promise=latest,
+            past_promises=[],
+            web_articles=[],
+            api_key=None,
+        )
+        self.assertIsNotNone(res["content"])
+        self.assertNotEqual(str(res["content"]).strip().lower(), "none")
+        self.assertGreater(len(res["content"]), 200)
+
 
 if __name__ == "__main__":
     unittest.main()
