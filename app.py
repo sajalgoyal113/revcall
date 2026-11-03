@@ -642,7 +642,7 @@ with tab_pred:
         ))
 
         style_fig(fig_h, h=330, margin=dict(l=52, r=28, t=24, b=46), xaxis_title="Guided Revenue ($B)", yaxis_title="Probability Held (%)", yaxis_range=[0, 100], showlegend=False)
-        st.plotly_chart(fig_h, use_container_width=True)
+        st.plotly_chart(fig_h, use_container_width=True, key="chart_pred_hurdle")
         st.markdown("</div>", unsafe_allow_html=True)
 
     with h_col2:
@@ -739,7 +739,7 @@ with tab_board:
             textinfo="percent+label", textposition="outside",
         ))
         style_fig(fig_donut, h=250, margin=dict(l=15, r=15, t=15, b=15), showlegend=False)
-        st.plotly_chart(fig_donut, use_container_width=True)
+        st.plotly_chart(fig_donut, use_container_width=True, key="chart_board_donut")
         st.markdown("</div>", unsafe_allow_html=True)
 
     with sum_right:
@@ -822,6 +822,7 @@ with tab_board:
         hide_index=True,
         use_container_width=True,
         height=480,
+        key="tbl_board_master",
         column_config={
             "Say-Do Score": st.column_config.ProgressColumn("Say-Do Score", format="%.1f", min_value=0, max_value=100),
             "Delivery Ratio": st.column_config.NumberColumn("Delivered ÷ Guided", format="%.2f×"),
@@ -1140,7 +1141,7 @@ with tab_val:
         yaxis_range=[50, 94],
         showlegend=False,
     )
-    st.plotly_chart(fig_matrix, use_container_width=True)
+    st.plotly_chart(fig_matrix, use_container_width=True, key="chart_val_matrix")
     st.markdown("</div>", unsafe_allow_html=True)
 
     v1, v2 = st.columns(2, gap="large")
@@ -1164,7 +1165,7 @@ with tab_val:
                 hovertemplate="<b>Predicted:</b> %{x:.1f}%<br><b>Observed:</b> %{y:.1f}%<extra></extra>",
             ))
             style_fig(fig_cal, h=320, xaxis_title="Mean Predicted Probability (%)", yaxis_title="Observed Full Delivery Rate (%)", xaxis_range=[0, 100], yaxis_range=[0, 100], showlegend=True)
-            st.plotly_chart(fig_cal, use_container_width=True)
+            st.plotly_chart(fig_cal, use_container_width=True, key="chart_val_calib")
         st.markdown("</div>", unsafe_allow_html=True)
 
     with v2:
@@ -1181,7 +1182,7 @@ with tab_val:
             hovertemplate="<b>%{y}</b>: %{x:+.2f}<extra></extra>",
         ))
         style_fig(fig_feat, h=320, xaxis_title="Weight in Linear Kernel (Log-Odds)", showlegend=False)
-        st.plotly_chart(fig_feat, use_container_width=True)
+        st.plotly_chart(fig_feat, use_container_width=True, key="chart_val_feat")
         st.markdown("</div>", unsafe_allow_html=True)
 
     # Market Event Study
@@ -1204,5 +1205,5 @@ with tab_val:
             hovertemplate="<b>Day %{x}:</b> %{y:.2f}% excess<extra></extra>",
         ))
         style_fig(fig_drift, h=320, xaxis_title="Trading Days Relative to Concall (Day 0 = Announcement)", yaxis_title="Cumulative Abnormal Return (%)", showlegend=True)
-        st.plotly_chart(fig_drift, use_container_width=True)
+        st.plotly_chart(fig_drift, use_container_width=True, key="chart_val_drift")
     st.markdown("</div>", unsafe_allow_html=True)

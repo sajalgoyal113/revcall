@@ -11,6 +11,8 @@
 [![Predictive ML](https://img.shields.io/badge/Model-HistGBDT%20%2B%20Bayesian%20MAP-a855f7?style=flat)](data/out/model.json)
 &nbsp;&nbsp;
 [![Tests Passing](https://img.shields.io/badge/Tests-17%2F17%20Passing-emerald?style=flat)](tests/)
+&nbsp;&nbsp;
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Auditing what corporate executive teams promise on quarterly earnings calls (SAY) against what they actually deliver in subsequent SEC 10-Q filings and concalls (DO) across the 50 most famous US market leaders.**
 
@@ -90,3 +92,9 @@ python3 -m unittest discover tests
 # 5. Master one-command verification runner
 python3 run_evaluation.py
 ```
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
