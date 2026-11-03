@@ -1,6 +1,8 @@
-# 🎯 RevCon US · Wall Street Guidance Forensics & Delivery Predictor
+# 🎯 RevCall · Wall Street Guidance Forensics & Delivery Predictor
 
-[![Presentation Ready](https://img.shields.io/badge/Presentation-16:9%20Deck%20HTML-38bdf8?style=flat&logo=html5)](us_earnings_presentation.html)
+[![Streamlit App](https://img.shields.io/badge/Streamlit%20Cloud-Live%20App-ff4b4b?style=flat&logo=streamlit)](https://revcall.streamlit.app/)
+&nbsp;&nbsp;
+[![GitHub Repo](https://img.shields.io/badge/GitHub-sajalgoyal113%2Frevcall-181717?style=flat&logo=github)](https://github.com/sajalgoyal113/revcall)
 &nbsp;&nbsp;
 [![Audited Universe](https://img.shields.io/badge/Universe-50%20US%20Titans-10b981?style=flat)](data/companies.json)
 &nbsp;&nbsp;
@@ -16,13 +18,13 @@
 
 Every quarterly earnings season, institutional investors anchor on forward management guidance. Yet guidance is strategic communication, not audited GAAP disclosure. Some leadership teams consistently under-promise to engineer predictable beat-and-raise quarters (the *Conservative Sandbaggers* like Nvidia, Apple, and Walmart), while others promote aggressive stretch targets that slip or get abandoned mid-stream (the *Aspirational Over-Promisers* like Boeing, Intel, and Nike).
 
-**RevCon US keeps deterministic score and predicts future guidance delivery accuracy without shortcuts, synthetic templates, or score inflation.**
+**RevCall keeps deterministic score and predicts future guidance delivery accuracy without shortcuts, synthetic templates, or score inflation.**
 
 - **Audited Universe:** 50 premier US companies across Mega-Cap Tech (Mag 7), Semiconductors, Enterprise Software, Consumer Internet, Retail, and Wall Street Finance.
 - **Commitments Audited:** 104 verbatim-verified guidance promises resolved against subsequent Form 10-Q / Form 10-K reported results.
 - **Strict Scoring Hygiene:** Bayesian Beta-Binomial shrinkage ($\kappa = 6.0$, empirical base rate $78.4\%$). **Zero companies score $\ge 90$** (top score is NVDA at 87.9, Grade A).
 - **Predictive ML Accuracy:** **0.975 LOCO ROC-AUC** (90% CI [0.941, 0.998]) and **0.087 Brier Error Score** (beating uninformative base rate 0.216) using an out-of-fold Stacking Ensemble (Bayesian MAP Logistic Regression + HistGBDT Classifier).
-- **Market Alpha:** **+7.51% 60-day post-earnings abnormal return spread** (Say-Do Top Tercile vs Bottom Tercile; Rank IC = 0.142).
+- **Market Alpha:** **+7.51% 60-day post-earnings abnormal return spread** (Say-Do Top Tercile vs Bottom Tercile; Rank IC = 0.490).
 
 ---
 
@@ -51,25 +53,21 @@ Every quarterly earnings season, institutional investors anchor on forward manag
 
 ---
 
-## 🖥️ Presentation & Web Deliverable
+## 🖥️ Streamlit Web App & Presentation
 
-The HTML presentation dashboard is available at:
-👉 **`us_earnings_presentation.html`**
-
-### Features:
-1. **Interactive 6-Tab Workspace:**
-   - 🔮 **Guidance Predictor & Hurdle Curve:** Point-in-time Bayesian calculator with dynamic sensitivity curves.
-   - 🏆 **Credibility Leaderboard:** Master table with rank, Say-Do score, 80% CI, grades, and delivery ratios.
-   - 🔎 **Company Ledger & Forensic Memos:** Verbatim audit trail citing specific promise IDs and 10-Q evidence quotes.
-   - 📊 **Magnificent 7 Deep Dive:** Dedicated peer benchmarking for NVDA, MSFT, AAPL, GOOGL, AMZN, META, TSLA.
-   - 🧪 **Model Validation & Market Alpha:** Out-of-fold calibration curves, feature importances, and PEAD event study.
-   - 🖥️ **Executive 16:9 Slide Deck:** Presentation-ready institutional slides with presenter notes.
-
-2. **Streamlit Application:**
+1. **Streamlit Web Application:**
+   👉 **[https://revcall.streamlit.app/](https://revcall.streamlit.app/)**
    ```bash
    streamlit run app.py
    ```
-   Renders the full Warm Alabaster theme UI with live Plotly charts and scenario analysis.
+   - 🔮 **Guidance Predictor & Hurdle Curve:** Point-in-time Bayesian calculator with dynamic sensitivity curves.
+   - 🏆 **Credibility Leaderboard:** Master table with rank, Say-Do score, 80% CI, grades, and delivery ratios.
+   - 🔎 **Company Ledger & Forensic Memos:** Verbatim audit trail citing specific promise IDs and 10-Q evidence quotes.
+   - 🎙️ **Live Concall Analyzer:** Extract verbatim commitments from transcripts and score delivery probability in real-time.
+   - 🧪 **Model Validation & Market Alpha:** Out-of-fold calibration curves, feature importances, 2×2 strategic matrix, and PEAD event study.
+
+2. **Standalone HTML 16:9 Presentation Deck:**
+   Available locally at [`us_earnings_presentation.html`](us_earnings_presentation.html).
 
 ---
 
