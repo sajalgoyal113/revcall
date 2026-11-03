@@ -18,11 +18,14 @@ import json
 import os
 import sys
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if ROOT_DIR not in sys.path:
-    sys.path.insert(0, ROOT_DIR)
+REPO_DIR = os.path.dirname(os.path.abspath(__file__))
+if REPO_DIR not in sys.path:
+    sys.path.insert(0, REPO_DIR)
 
-from us_earnings import config
+try:
+    import config
+except ImportError:
+    from us_earnings import config
 
 
 def load_data():
@@ -2138,18 +2141,11 @@ def generate_dashboard():
     d = load_data()
     content = generate_revcon_html(d)
 
-    # 1. Output inside us_earnings/
-    out_path1 = os.path.join(config.ROOT, "us_earnings_presentation.html")
-    with open(out_path1, "w", encoding="utf-8") as f:
+    out_path = os.path.join(config.ROOT, "us_earnings_presentation.html")
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write(content)
-    print(f"Generated: {out_path1} ({len(content)} bytes)")
-
-    # 2. Output in workspace root
-    out_path2 = os.path.join(ROOT_DIR, "us_earnings_presentation.html")
-    with open(out_path2, "w", encoding="utf-8") as f:
-        f.write(content)
-    print(f"Generated workspace file: {out_path2}")
-    return out_path1
+    print(f"Generated: {out_path} ({len(content)} bytes)")
+    return out_path
 
 
 if __name__ == "__main__":

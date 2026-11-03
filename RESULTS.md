@@ -15,14 +15,14 @@
 | **Universe Base Rate** | **78.4%** | Weighted empirical delivery rate across all guidance commitments |
 | **Max Say-Do Score** | **87.9 (NVDA)** | **Strictly < 90** — no artificial score inflation; shrunk via Beta-Binomial ($\kappa = 6.0$) |
 | **Min Say-Do Score** | **57.6 (BA)** | Reflects real delivery breakdowns (Boeing 737 MAX ramp delays, FCF burns) |
-| **Grade A Companies (≥80)** | **33 Companies** | Disciplined execution compounders (NVDA, AAPL, AVGO, GOOGL, META, MSFT, NFLX) |
-| **Grade B Companies (68–79)**| **11 Companies** | Moderate delivery or higher uncertainty (TSLA, MU, SNOW, COIN, SPOT, AMD) |
-| **Grade C Companies (55–67)**| **6 Companies** | Turnaround/distressed execution (BA, INTC, NKE, SBUX, TGT, BA) |
+| **Grade A Companies (≥80)** | **34 Companies** | Disciplined execution compounders (NVDA, AAPL, AVGO, GOOGL, META, MSFT, NFLX) |
+| **Grade B Companies (68–79)**| **10 Companies** | Moderate delivery or higher uncertainty (AMD, ADBE, MS, PANW, CRWD, CRM, SNOW, HD, UNH, MCD) |
+| **Grade C Companies (55–67)**| **6 Companies** | Turnaround/distressed execution (TSLA, SBUX, INTC, TGT, NKE, BA) |
 | **Grade D / F (<55)** | **0 Companies** | No complete collapse across 50 titans |
 | **Out-of-Sample ROC-AUC** | **0.775** | Out-of-sample stratified cross-validation (90% CI: [0.682, 0.869]) |
 | **Out-of-Sample Brier Score** | **0.160** | Substantial improvement over uninformative base rate (0.216) |
 | **60-Day Alpha Spread** | **+7.51%** | Top tercile Say-Do vs bottom tercile Say-Do post-earnings drift |
-| **Mean Rank IC** | **+0.142** | Spearman correlation between credibility score and 60-day abnormal return |
+| **Mean Rank IC** | **+0.490** | Spearman correlation between credibility score and 60-day abnormal return |
 
 ---
 
@@ -34,7 +34,7 @@
 - **GOOGL (Say-Do: 85.1, Grade A, 1.02× Delivery Ratio):** Search ad durability and Google Cloud operating income margin expansion delivered consistently.
 - **META (Say-Do: 85.1, Grade A, 1.03× Delivery Ratio):** "Year of Efficiency" discipline followed by precise Capex guidance execution ($37–40B).
 - **MSFT (Say-Do: 84.0, Grade A, 1.00× Delivery Ratio):** Azure constant currency growth (29–30%) delivered precisely in line with management targets.
-- **TSLA (Say-Do: 73.1, Grade B, 0.77× Delivery Ratio):** Vehicle volume growth targets revised down ("notably lower"), Cybertruck profitability delays, Robotaxi deployment timelines shifted.
+- **TSLA (Say-Do: 67.6, Grade C, 0.88× Delivery Ratio):** Vehicle volume growth targets revised down ("notably lower"), Cybertruck gross margin pressure, Robotaxi deployment timelines shifted.
 
 ### Turnaround & High-Slippage Titans
 - **BA (Say-Do: 57.6, Grade C):** 737 MAX production rate cap (38/month) frozen by FAA after January 2024 door-plug incident; $10B FY25–26 FCF guidance formally abandoned.

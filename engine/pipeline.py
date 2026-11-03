@@ -14,13 +14,17 @@ import sys
 from datetime import date
 import numpy as np
 
-# Ensure ROOT_DIR is in python path
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if ROOT_DIR not in sys.path:
-    sys.path.insert(0, ROOT_DIR)
+# Ensure REPO_DIR is in python path for portable execution
+REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if REPO_DIR not in sys.path:
+    sys.path.insert(0, REPO_DIR)
 
-from us_earnings import config
-from us_earnings.engine import market, memo, predict, score
+try:
+    import config
+    from engine import market, memo, predict, score
+except ImportError:
+    from us_earnings import config
+    from us_earnings.engine import market, memo, predict, score
 
 
 def run_pipeline():
