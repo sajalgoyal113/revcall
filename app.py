@@ -10,6 +10,7 @@ Run:
 import json
 import os
 import re
+import sys
 from datetime import date
 
 import numpy as np
@@ -18,8 +19,16 @@ import plotly.graph_objects as go
 import streamlit as st
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(DATA, "out")
+
+try:
+    from engine import meta_api
+except ImportError:
+    import meta_api
 
 st.set_page_config(
     page_title="RevCall · US Corporate Guidance Forensics & Predictor",
@@ -412,29 +421,39 @@ by_t = {c["ticker"]: c for c in scores["companies"]}
 # ---------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("### 🎯 RevCall Configuration")
-    st.caption("Wall Street Guidance Forensics & Predictor")
+    st.caption("Meta Global AI Hackathon Edition")
 
-    llm_choice = st.selectbox(
-        "Active AI Stack",
-        ["Meta Muse (muse-spark-1.3 & wonder-1.0)", "Open-Weights Student (Llama-3.1-8B SFT)", "Google Gemini (Fallback)"],
+    meta_model_choice = st.selectbox(
+        "Meta AI Model (Meta Model API)",
+        [
+            "muse-spark-1.3 (Meta Reasoning & Code)",
+            "muse-spark-1.2 (Fast Reasoning)",
+            "llama-3.3-70b-instruct (Meta Open-Weights)",
+            "llama-3.1-405b-instruct (Frontier Scale)",
+        ],
         index=0,
+        key="sb_meta_model",
     )
+    selected_model_id = meta_model_choice.split()[0]
 
     user_api_key = st.text_input(
-        "Live AI API Key",
+        "Meta Model API Key",
         value="",
         type="password",
-        placeholder="Paste META_MODEL_API_KEY / GEMINI_API_KEY...",
-        help="Optional for pre-computed universe; required only for live concall processing.",
+        placeholder="Enter META_API_KEY / MUSE_API_KEY...",
+        help="Optional: Pre-computed forensic memos and predictions are active for all 50 titans. Enter your key to run live dynamic Meta Muse synthesis.",
+        key="sb_meta_key",
     )
-    if user_api_key:
-        st.success("🟢 Live LLM API Connected")
+    active_meta_key = meta_api.resolve_meta_api_key(user_api_key)
+    if active_meta_key:
+        st.success(f"🟢 Meta Model API Active (`{selected_model_id}`)")
     else:
-        st.info(f"✨ Instant Pre-Computed Mode Active (50 US Titans & {len(resolved)} Commitments Ready)")
+        st.info("⚡ Instant Pre-Computed Mode Active (50 Titans Ready) · Enter key for live Meta Muse generation")
 
     st.markdown("---")
     st.markdown("**Core Algorithms**")
     st.markdown(
+        "- **AI Engine**: `Meta Muse (muse-spark-1.3)`\n"
         "- **Bayesian Credibility**: `Beta-Binomial (κ=6.0)`\n"
         "- **Guidance Predictor**: `HistGBDT + MAP Logistic`\n"
         "- **Market Event Study**: `60-Day Abnormal Drift (PEAD)`\n"
@@ -477,11 +496,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-tab_pred, tab_board, tab_co, tab_live, tab_val = st.tabs([
+tab_pred, tab_board, tab_co, tab_val = st.tabs([
     "🔮 Guidance Predictor & Hurdle Curve",
     "🏆 Credibility Leaderboard",
-    "🔎 Company Ledger & Forensic Memo",
-    "🎙️ Live Concall Analyzer",
+    "🔎 Company Ledger & Meta Muse Memo",
     "🧪 Model Validation & Alpha",
 ])
 
@@ -501,6 +519,7 @@ with tab_pred:
             "US Stock Ticker",
             tickers_list,
             index=tickers_list.index("NVDA") if "NVDA" in tickers_list else 0,
+            key="pred_chosen_ticker",
         )
         co_info = by_t.get(chosen_ticker, {})
         co_grade = co_info.get("grade", "A")
@@ -527,19 +546,20 @@ with tab_pred:
         st.markdown('<div class="section-caption">Simulate forward revenue target, ambition stretch, and executive tone</div>', unsafe_allow_html=True)
 
         f1, f2, f3 = st.columns(3)
-        g_cat = f1.selectbox("Guidance Category", ["Quarterly Revenue ($B)", "YoY Revenue Growth (%)", "Operating Margin (%)", "Capex Budget ($B)"])
+        g_cat = f1.selectbox("Guidance Category", ["Quarterly Revenue ($B)", "YoY Revenue Growth (%)", "Operating Margin (%)", "Capex Budget ($B)"], key="pred_g_cat")
         default_val = 37.5 if chosen_ticker == "NVDA" else (25.0 if chosen_ticker == "TSLA" else 64.0)
-        g_val = f2.number_input("Guided Value", value=float(default_val), step=1.0)
-        g_horizon = f3.selectbox("Horizon", ["Q+1 (Next Quarter)", "Full Year (12M)", "Multi-Year (24M)"])
+        g_val = f2.number_input("Guided Value", value=float(default_val), step=1.0, key="pred_g_val")
+        g_horizon = f3.selectbox("Horizon", ["Q+1 (Next Quarter)", "Full Year (12M)", "Multi-Year (24M)"], key="pred_g_horizon")
 
         f4, f5 = st.columns(2)
-        g_strength = f4.selectbox("Commitment Firmness", ["Firm Commitment ('We will deliver...')", "Target ('Guiding / Targeting...')", "Hedged / Aspirational ('Subject to...')"])
-        g_speaker = f5.selectbox("Executive Speaker", [f"{co_info.get('ceo')} (CEO)", f"{co_info.get('cfo')} (CFO)"])
+        g_strength = f4.selectbox("Commitment Firmness", ["Firm Commitment ('We will deliver...')", "Target ('Guiding / Targeting...')", "Hedged / Aspirational ('Subject to...')"], key="pred_g_strength")
+        g_speaker = f5.selectbox("Executive Speaker", [f"{co_info.get('ceo')} (CEO)", f"{co_info.get('cfo')} (CFO)"], key="pred_g_speaker")
 
         g_quote = st.text_area(
             "Verbatim Guidance Quote",
             value=f"For the upcoming period, we expect total revenue of approximately ${g_val:g} billion, reflecting solid operational execution across our core platforms.",
             height=60,
+            key="pred_g_quote",
         )
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -609,6 +629,53 @@ with tab_pred:
         for p in c_proms[:3]:
             st.markdown(f"- `{p['call_date']}`: {p['summary'][:45]} → **{p['resolution']['outcome']}**")
         st.markdown("</div>", unsafe_allow_html=True)
+
+    # Meta Muse Strategic Guidance Briefing
+    st.markdown('<div class="section-card" style="margin-top:16px;">', unsafe_allow_html=True)
+    sb_c1, sb_c2 = st.columns([2.2, 1.2])
+    with sb_c1:
+        st.markdown(
+            f'<div class="section-title">⚡ Meta Muse Strategic Guidance Briefing</div>'
+            f'<div class="section-caption">Synthesizes an institutional Wall Street assessment of {chosen_ticker}\'s ${g_val:g}B guide using Meta Model API (<code>{selected_model_id}</code>).</div>',
+            unsafe_allow_html=True,
+        )
+    with sb_c2:
+        run_briefing = st.button("✨ Generate Meta Muse Briefing", key="btn_run_briefing", type="primary")
+
+    if run_briefing:
+        with st.spinner(f"Evaluating with Meta Muse ({selected_model_id})..."):
+            b_res = meta_api.generate_meta_guidance_analysis(
+                ticker=chosen_ticker,
+                company_info=co_info,
+                guided_cat=g_cat,
+                guided_val=g_val,
+                horizon=g_horizon,
+                firmness=g_strength,
+                quote=g_quote,
+                p_held=p_kept,
+                adj_target=f"${adj_target:.2f}B",
+                api_key=user_api_key,
+                model=selected_model_id,
+            )
+            if b_res["success"]:
+                st.markdown(
+                    f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #BFDBFE;border-left:4px solid #2563EB;border-radius:10px;margin-top:10px;">'
+                    f'<div style="font-size:12px;font-weight:700;color:#1E40AF;margin-bottom:6px;">🟢 META MUSE SPARK STRATEGIC ASSESSMENT ({selected_model_id})</div>'
+                    f'<div style="font-size:13.5px;color:#0F172A;line-height:1.6;">{b_res["content"]}</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.markdown(
+                    f'<div style="padding:14px 18px;background:#FAF9F6;border:1px solid #E2E8F0;border-left:4px solid #059669;border-radius:10px;margin-top:10px;">'
+                    f'<div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:6px;">⚡ PRE-COMPUTED INSTITUTIONAL BRIEFING ({chosen_ticker})</div>'
+                    f'<p style="font-size:13.5px;color:#334155;margin:0 0 8px 0;"><b>Probability &amp; Track Record:</b> {chosen_ticker} carries a <b>{co_info.get("score"):.1f}/100 Say-Do Score (Grade {co_info.get("grade")})</b> with an average delivery ratio of <b>{deliv_ratio:.2f}×</b>. The model assigns a <b>{p_kept:.1%}</b> survival probability to this guidance target.</p>'
+                    f'<p style="font-size:13.5px;color:#334155;margin:0 0 8px 0;"><b>Sandbagging vs Stretch:</b> Management\'s guided target of ${g_val:g}B projects to an audited delivery expectation of <b>${adj_target:.2f}B</b> based on historical 10-Q reconciliations.</p>'
+                    f'<p style="font-size:12px;color:#64748B;margin:0;"><i>Note: Enter your Meta Model API Key in the sidebar to run live real-time generation on arbitrary guidance texts.</i></p>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ===========================================================================
 # TAB 2: CREDIBILITY LEADERBOARD
@@ -739,7 +806,7 @@ with tab_board:
 # ===========================================================================
 with tab_co:
     t_list = [c["ticker"] for c in scores["companies"]]
-    co_sel = st.selectbox("Select Company to Audit", t_list, index=t_list.index("NVDA") if "NVDA" in t_list else 0)
+    co_sel = st.selectbox("Select Company to Audit", t_list, index=t_list.index("NVDA") if "NVDA" in t_list else 0, key="ledger_co_sel")
     c_info = by_t[co_sel]
     c_promises = [p for p in resolved if p["ticker"] == co_sel]
 
@@ -805,6 +872,35 @@ with tab_co:
     st.markdown(grid_html, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+    # Meta Muse Live Synthesis Action
+    st.markdown("---")
+    m_head, m_btn = st.columns([2.2, 1.2])
+    with m_head:
+        st.markdown(
+            f'<div style="font-size:14px;font-weight:700;color:#0F172A;">⚡ Live Meta Muse Spark Forensic Synthesis</div>'
+            f'<div style="font-size:12px;color:#64748B;">Re-audit {co_sel}\'s verbatim concall commitments against SEC 10-Q disclosures in real time via Meta Model API (<code>{selected_model_id}</code>).</div>',
+            unsafe_allow_html=True,
+        )
+    with m_btn:
+        run_meta_memo = st.button(f"✨ Run Meta Muse Audit for {co_sel}", key="btn_run_meta_memo")
+
+    if run_meta_memo:
+        with st.spinner(f"Querying Meta Model API ({selected_model_id}) for {co_sel}..."):
+            api_res = meta_api.generate_meta_memo(co_sel, c_info, c_info, c_promises, api_key=user_api_key, model=selected_model_id)
+            if api_res["success"]:
+                st.markdown(
+                    f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #BFDBFE;border-left:4px solid #2563EB;border-radius:10px;margin:12px 0;">'
+                    f'<div style="font-size:12px;font-weight:700;color:#1E40AF;margin-bottom:6px;">🟢 LIVE META MUSE SPARK AUDIT ({selected_model_id})</div>'
+                    f'<div style="font-size:13.5px;color:#0F172A;line-height:1.6;">{api_res["content"]}</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.info(
+                    f"💡 {api_res['error']}\n\n"
+                    f"*Displaying verified pre-computed institutional memo below (audited benchmark)*"
+                )
+
     # Verbatim Say -> Do Ledger
     st.markdown("#### 📜 Verbatim Concall Audit Ledger: What Management Said → What Actually Happened")
     for p in c_promises:
@@ -817,153 +913,7 @@ with tab_co:
             st.markdown(f'<div class="do-box">📊 <b>SEC 10-Q AUDIT RESULT ({o}):</b> {r.get("why", "Delivered")}<br><span style="color:#64748B;font-size:12px;">Evidence: “{r.get("evidence_quote", "Confirmed in filings")}”</span></div>', unsafe_allow_html=True)
 
 # ===========================================================================
-# TAB 4: LIVE CONCALL ANALYZER
-# ===========================================================================
-with tab_live:
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">🎙️ Live Earnings Call Transcript & Guidance Analyzer</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="section-caption">Paste any new earnings call excerpt or select a Wall Street Titan preset. '
-        'Extracts verbatim forward commitments and scores each promise against the management team\'s historical Say-Do track record.</div>',
-        unsafe_allow_html=True,
-    )
-
-    SAMPLE_US_EXCERPTS = {
-        "NVIDIA Corporation — Q2 FY25 (Blackwell GPU Ramp & $32.5B Guidance)": (
-            "NVDA",
-            "Colette Kress (CFO): Revenue is expected to be $32.5 billion, plus or minus 2%. "
-            "We expect sequential growth across all market platforms led by Data Center. "
-            "Furthermore, Blackwell architecture production ramp will begin in the fourth quarter and continue into fiscal 2026, "
-            "with gross margins stabilizing in the mid-70s.",
-        ),
-        "Tesla Inc. — Q3 2024 (Vehicle Volume Growth & Cybercab FSD Deployment)": (
-            "TSLA",
-            "Elon Musk (CEO): We are targeting 20% to 30% vehicle delivery volume growth in 2025, "
-            "driven by lower-cost models and autonomous technology advancements. "
-            "Moreover, we expect Cybercab unsupervised FSD ride-hailing to launch commercially in Texas and California by 2026.",
-        ),
-        "Microsoft Corporation — Q4 FY24 (Azure 28-29% Growth & AI Capex Scaling)": (
-            "MSFT",
-            "Amy Hood (CFO): In Azure, we expect constant currency revenue growth to be 28% to 29% in Q1, "
-            "with cloud growth accelerating in the second half of fiscal 2025 as AI capacity comes online. "
-            "Capital expenditures will increase sequentially to support cloud and AI demand.",
-        ),
-        "Apple Inc. — Q3 FY24 (Services Double-Digit Growth & Gross Margin 46%)": (
-            "AAPL",
-            "Luca Maestri (CFO): For the September quarter, we expect total revenue to grow year-over-year "
-            "at a rate similar to the June quarter, with Services continuing strong double-digit growth. "
-            "Gross margin is expected to be between 45.5% and 46.5%.",
-        ),
-        "Intel Corporation — Q2 2024 (18A Foundry Ramp & $10B Cost Restructuring)": (
-            "INTC",
-            "Pat Gelsinger (CEO): We are guiding Q3 revenue of $12.5 billion to $13.5 billion, "
-            "executing a $10 billion cost-reduction plan in 2025 including reducing headcount by more than 15%, "
-            "while remaining firmly on track to ramp Intel 18A for volume manufacturing in 2025.",
-        ),
-        "The Boeing Company — 737 MAX 38/month Ramp & Cash Outflow": (
-            "BA",
-            "Brian West (CFO): We maintain our target of stabilizing 737 production at 38 per month by the end of 2024, "
-            "but free cash flow generation will be an outflow of approximately $4 billion for the full year.",
-        ),
-    }
-
-    preset_choice = st.selectbox("Load Sample Earnings Call Excerpt (or paste custom transcript below)", list(SAMPLE_US_EXCERPTS.keys()))
-    default_t, default_txt = SAMPLE_US_EXCERPTS[preset_choice]
-
-    l1, l2 = st.columns([1.0, 2.2], gap="large")
-    with l1:
-        lt = st.text_input("US Stock Ticker", value=default_t).upper().strip()
-        ld = st.date_input("Earnings Call Date", value=date.today())
-        up = st.file_uploader("Optional: Upload Transcript (.txt)", type=["txt"])
-    with l2:
-        txt = st.text_area("Concall Transcript Text", value=default_txt, height=165)
-
-    analyze_clicked = st.button("🚀 Extract Promises & Predict Guidance Survival", type="primary")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    if analyze_clicked:
-        if up is not None:
-            txt = up.read().decode(errors="ignore")
-
-        co_hist = by_t.get(lt, {
-            "score": 75.0,
-            "grade": "B",
-            "delivery_ratio": 1.0,
-            "ghost_rate": 0.0,
-            "name": lt,
-            "sector": "US Equity"
-        })
-
-        sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", txt.strip()) if len(s.strip()) > 20]
-        extracted_rows = []
-
-        for sent in sentences[:6]:
-            nums = [float(x.replace(",", "")) for x in re.findall(r"\b\d+(?:,\d{3})*(?:\.\d+)?\b", sent) if float(x.replace(",", "")) < 50000]
-            sl = sent.lower()
-
-            if "margin" in sl or "gross margin" in sl:
-                cat_s = "Operating / Gross Margin"
-                val_s = next((n for n in nums if 20 <= n <= 85), 45.0)
-                unit_s = "%"
-            elif "growth" in sl or "%" in sent:
-                cat_s = "YoY Revenue Growth"
-                val_s = next((n for n in nums if 5 <= n <= 100), 20.0)
-                unit_s = "%"
-            elif "capex" in sl or "capital expenditure" in sl:
-                cat_s = "Capex Budget"
-                val_s = next((n for n in nums if n >= 5), 12.0)
-                unit_s = "$B"
-            elif "ramp" in sl or "launch" in sl or "volume" in sl:
-                cat_s = "Product Ramp / Milestone"
-                val_s = nums[0] if nums else None
-                unit_s = "units/node"
-            else:
-                cat_s = "Quarterly Revenue Target"
-                val_s = next((n for n in nums if n >= 5), 28.0)
-                unit_s = "$B"
-
-            # Tone & horizon heuristic
-            is_firm = any(w in sl for w in ("will", "committed", "target", "record", "guidance"))
-            is_hedged = any(w in sl for w in ("subject to", "expect", "approximately", "tentative", "likely"))
-            tone = "Firm" if is_firm and not is_hedged else ("Hedged" if is_hedged else "Target")
-
-            base_p = co_hist.get("score", 75.0) / 100.0
-            tone_adj = 1.03 if tone == "Firm" else (0.88 if tone == "Hedged" else 0.97)
-            ghost_adj = co_hist.get("ghost_rate", 0.0) * 0.35
-            p_kept_val = float(np.clip(base_p * tone_adj - ghost_adj, 0.15, 0.98))
-
-            deliv_fac = co_hist.get("delivery_ratio", 1.0)
-            adj_val = round(val_s * deliv_fac, 2) if val_s is not None else None
-
-            extracted_rows.append({
-                "P(Kept)": p_kept_val,
-                "Category": cat_s,
-                "Horizon": "Q+1 / FY25",
-                "Tone": tone,
-                "Credibility-Adjusted Target": (
-                    f"{val_s:g}{unit_s} → {adj_val:g}{unit_s} ({deliv_fac:.2f}×)"
-                    if val_s is not None else "Milestone Ramp"
-                ),
-                "Verbatim Quote": sent,
-            })
-
-        st.success(
-            f"Extracted **{len(extracted_rows)}** verifiable forward commitments from `{lt}` earnings call. "
-            f"**{co_hist.get('name', lt)}** Historical Say-Do Score: **{co_hist['score']:.1f}/100 (Grade {co_hist['grade']})** · Delivery Ratio: **{co_hist['delivery_ratio']:.2f}×**"
-        )
-
-        df_live = pd.DataFrame(extracted_rows)
-        st.dataframe(
-            df_live,
-            hide_index=True,
-            use_container_width=True,
-            column_config={
-                "P(Kept)": st.column_config.ProgressColumn("Predicted P(Kept)", format="%.1f%%", min_value=0, max_value=1),
-            },
-        )
-
-# ===========================================================================
-# TAB 5: MODEL VALIDATION & ALPHA
+# TAB 4: MODEL VALIDATION & ALPHA
 # ===========================================================================
 with tab_val:
     vk = st.columns(4, gap="medium")
@@ -974,38 +924,192 @@ with tab_val:
 
     st.write("")
 
-    # Strategic 2x2 Matrix
+    # Strategic 2x2 Matrix (Redesigned: High-Contrast, Smart Landmark Labeling, Zero Overlap)
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">🎯 The "Sandbaggers" vs "Over-Promisers" 2×2 Strategic Matrix</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-caption">Mapping Revenue Delivery Ratio (X-Axis) against Say-Do Credibility Score (Y-Axis) across all 50 US titans</div>', unsafe_allow_html=True)
 
-    fig_matrix = go.Figure()
-    fig_matrix.add_vrect(x0=0.65, x1=1.00, fillcolor="rgba(244, 63, 94, 0.04)", line_width=0)
-    fig_matrix.add_vrect(x0=1.00, x1=1.38, fillcolor="rgba(5, 150, 105, 0.05)", line_width=0)
-    fig_matrix.add_hline(y=80, line=dict(color="#CBD5E1", dash="dash", width=1.5))
-    fig_matrix.add_vline(x=1.00, line=dict(color="#CBD5E1", dash="dash", width=1.5))
+    m_c1, m_c2 = st.columns([2.0, 1.2])
+    filter_cohort = m_c1.selectbox(
+        "Highlight Cohort / Industry Vertical",
+        [
+            "All 50 US Titans",
+            "Magnificent 7 & Mega-Cap Tech (NVDA, AAPL, MSFT, GOOGL, META, AMZN, TSLA)",
+            "Semiconductors & AI (NVDA, AVGO, AMD, INTC, QCOM, MU, AMAT, TXN)",
+            "Enterprise Software (PLTR, CRM, ADBE, ORCL, NOW, PANW, CRWD, SNOW)",
+            "Retail & Consumer (WMT, COST, TGT, HD, NKE, SBUX, MCD)",
+            "Turnaround & Slippage Watch (Grade C: BA, INTC, TGT, NKE, SBUX, TSLA)",
+        ],
+        key="matrix_cohort",
+    )
+    label_pref = m_c2.radio(
+        "Display Labels",
+        ["Key Anchors (Clean)", "All in Cohort", "Hover Only"],
+        horizontal=True,
+        key="matrix_label_pref",
+    )
 
     all_c = scores["companies"]
-    fig_matrix.add_trace(go.Scatter(
-        x=[c["delivery_ratio"] for c in all_c],
-        y=[c["score"] for c in all_c],
-        mode="markers+text",
-        text=[c["ticker"] for c in all_c],
-        textposition="top center",
-        textfont=dict(family="JetBrains Mono", size=10.5, color=INK_2),
-        marker=dict(
-            size=[max(8, min(24, int(c["market_cap"] ** 0.38))) for c in all_c],
-            color=[grade_color(c["grade"]) for c in all_c],
-            line=dict(color="#FFFFFF", width=1.5),
-        ),
-        hovertemplate="<b>%{text}</b><br>Delivery Ratio: <b>%{x:.2f}×</b><br>Say-Do Score: <b>%{y:.1f}</b><extra></extra>",
-    ))
+    all_tickers = {c["ticker"] for c in all_c}
 
-    fig_matrix.add_annotation(x=1.12, y=87, text="<b>CONSERVATIVE SANDBAGGERS</b><br>NVDA, AAPL, AVGO, WMT, NFLX", showarrow=False, font=dict(color=EMERALD, size=11))
-    fig_matrix.add_annotation(x=0.94, y=86, text="<b>DISCIPLINED COMPOUNDERS</b><br>MSFT, GOOGL, META, V, JPM", showarrow=False, font=dict(color=COBALT, size=11))
-    fig_matrix.add_annotation(x=0.76, y=62, text="<b>HABITUAL OVER-PROMISERS</b><br>INTC, BA, TGT, NKE", showarrow=False, font=dict(color=ROSE, size=11))
+    mag7_set = {"NVDA", "AAPL", "MSFT", "GOOGL", "META", "AMZN", "TSLA"}
+    semis_set = {"NVDA", "AVGO", "AMD", "INTC", "QCOM", "MU", "AMAT", "TXN"}
+    software_set = {"PLTR", "CRM", "ADBE", "ORCL", "NOW", "PANW", "CRWD", "SNOW"}
+    retail_set = {"WMT", "COST", "TGT", "HD", "NKE", "SBUX", "MCD"}
+    turnaround_set = {"BA", "INTC", "TGT", "NKE", "SBUX", "TSLA"}
 
-    style_fig(fig_matrix, h=440, xaxis_title="Revenue Delivery Ratio (Delivered ÷ Guided) →", yaxis_title="Say-Do Credibility Score (0–100) →", xaxis_range=[0.65, 1.38], yaxis_range=[50, 92], showlegend=False)
+    if "Magnificent 7" in filter_cohort:
+        active_set = mag7_set
+    elif "Semiconductors" in filter_cohort:
+        active_set = semis_set
+    elif "Enterprise Software" in filter_cohort:
+        active_set = software_set
+    elif "Retail" in filter_cohort:
+        active_set = retail_set
+    elif "Turnaround" in filter_cohort:
+        active_set = turnaround_set
+    else:
+        active_set = all_tickers
+
+    KEY_ANCHORS = {"NVDA", "AAPL", "AVGO", "WMT", "MSFT", "GOOGL", "META", "TSLA", "INTC", "BA", "TGT", "NKE", "AMD", "PLTR", "CRM", "JPM", "NFLX"}
+
+    fig_matrix = go.Figure()
+
+    # Subtle Quadrant Background Fills
+    fig_matrix.add_shape(type="rect", x0=0.65, x1=1.00, y0=80, y1=94, fillcolor="rgba(37, 99, 235, 0.035)", line_width=0, layer="below")
+    fig_matrix.add_shape(type="rect", x0=1.00, x1=1.40, y0=80, y1=94, fillcolor="rgba(5, 150, 105, 0.045)", line_width=0, layer="below")
+    fig_matrix.add_shape(type="rect", x0=0.65, x1=1.00, y0=50, y1=80, fillcolor="rgba(225, 29, 72, 0.040)", line_width=0, layer="below")
+    fig_matrix.add_shape(type="rect", x0=1.00, x1=1.40, y0=50, y1=80, fillcolor="rgba(217, 119, 6, 0.030)", line_width=0, layer="below")
+
+    # Boundary Crosshairs
+    fig_matrix.add_hline(y=80, line=dict(color="#CBD5E1", dash="dash", width=1.4))
+    fig_matrix.add_vline(x=1.00, line=dict(color="#CBD5E1", dash="dash", width=1.4))
+
+    # Corner Watermark Badges (positioned cleanly in empty quadrant margins away from data)
+    fig_matrix.add_annotation(
+        x=1.38, y=92.5,
+        text="<b>🟢 CONSERVATIVE SANDBAGGERS</b><br><span style='font-size:9.5px;color:#047857;'>Beat-and-Raise Cadence (Ratio > 1.0×, Grade A)</span>",
+        showarrow=False, align="right", font=dict(family="Inter", size=10.5, color=EMERALD),
+        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#A7F3D0", borderpad=5,
+    )
+    fig_matrix.add_annotation(
+        x=0.67, y=92.5,
+        text="<b>🔵 DISCIPLINED COMPOUNDERS</b><br><span style='font-size:9.5px;color:#1D4ED8;'>Predictable Execution (Ratio ≤ 1.0×, Grade A)</span>",
+        showarrow=False, align="left", font=dict(family="Inter", size=10.5, color=COBALT),
+        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#BFDBFE", borderpad=5,
+    )
+    fig_matrix.add_annotation(
+        x=0.67, y=52.5,
+        text="<b>🔴 HABITUAL OVER-PROMISERS</b><br><span style='font-size:9.5px;color:#BE123C;'>Guidance Slippage Risk (Ratio < 1.0×, Grade C)</span>",
+        showarrow=False, align="left", font=dict(family="Inter", size=10.5, color=ROSE),
+        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#FECDD3", borderpad=5,
+    )
+    fig_matrix.add_annotation(
+        x=1.38, y=52.5,
+        text="<b>🟠 VOLATILE / MIXED DELIVERY</b><br><span style='font-size:9.5px;color:#B45309;'>Uncertain Conversion (Ratio ≥ 1.0×, Grade B/C)</span>",
+        showarrow=False, align="right", font=dict(family="Inter", size=10.5, color=AMBER),
+        bgcolor="rgba(255, 255, 255, 0.92)", bordercolor="#FDE68A", borderpad=5,
+    )
+
+    # Prepare Points with Deterministic Visual Jitter on x=1.00
+    pts_highlight = []
+    pts_dimmed = []
+
+    for c in all_c:
+        t = c["ticker"]
+        raw_x = c["delivery_ratio"]
+        # Small deterministic visual offset for exact 1.00 collisions
+        if abs(raw_x - 1.00) < 0.005:
+            vis_x = round(raw_x + ((hash(t) % 11) - 5) * 0.006, 4)
+        else:
+            vis_x = raw_x
+
+        is_active = t in active_set
+
+        # Determine label
+        if label_pref == "Hover Only":
+            txt = ""
+        elif label_pref == "All in Cohort":
+            txt = t if is_active else ""
+        else:  # Key Anchors
+            txt = t if (t in KEY_ANCHORS and is_active) else ""
+
+        pt_dict = {
+            "vis_x": vis_x,
+            "raw_x": raw_x,
+            "y": c["score"],
+            "ticker": t,
+            "name": c["name"],
+            "sector": c["sector"],
+            "grade": c["grade"],
+            "market_cap": c["market_cap"],
+            "size": max(10, min(26, int(10 + (c["market_cap"] ** 0.35)))),
+            "color": grade_color(c["grade"]),
+            "text": txt,
+        }
+        if is_active:
+            pts_highlight.append(pt_dict)
+        else:
+            pts_dimmed.append(pt_dict)
+
+    # Trace 1: Dimmed Background Points (if cohort filter is active)
+    if pts_dimmed:
+        fig_matrix.add_trace(go.Scatter(
+            x=[p["vis_x"] for p in pts_dimmed],
+            y=[p["y"] for p in pts_dimmed],
+            mode="markers",
+            marker=dict(
+                size=[p["size"] - 2 for p in pts_dimmed],
+                color="rgba(203, 213, 225, 0.65)",
+                line=dict(color="#FFFFFF", width=1.0),
+            ),
+            customdata=[[p["ticker"], p["name"], p["sector"], p["grade"], p["raw_x"], p["market_cap"]] for p in pts_dimmed],
+            hovertemplate=(
+                "<b>%{customdata[0]}</b> · %{customdata[1]}<br>"
+                "Sector: %{customdata[2]}<br>"
+                "Say-Do Score: <b>%{y:.1f}/100</b> (Grade %{customdata[3]})<br>"
+                "Delivery Ratio: <b>%{customdata[4]:.2f}×</b><br>"
+                "Market Cap: <b>$%{customdata[5]:,}B</b><extra></extra>"
+            ),
+            showlegend=False,
+        ))
+
+    # Trace 2: Active / Highlighted Points
+    if pts_highlight:
+        has_text = any(p["text"] for p in pts_highlight)
+        fig_matrix.add_trace(go.Scatter(
+            x=[p["vis_x"] for p in pts_highlight],
+            y=[p["y"] for p in pts_highlight],
+            mode="markers+text" if has_text else "markers",
+            text=[p["text"] for p in pts_highlight],
+            textposition="top center",
+            textfont=dict(family="JetBrains Mono", size=11, color="#0F172A"),
+            marker=dict(
+                size=[p["size"] for p in pts_highlight],
+                color=[p["color"] for p in pts_highlight],
+                line=dict(color="#FFFFFF", width=1.8),
+                opacity=0.92,
+            ),
+            customdata=[[p["ticker"], p["name"], p["sector"], p["grade"], p["raw_x"], p["market_cap"]] for p in pts_highlight],
+            hovertemplate=(
+                "<b>%{customdata[0]}</b> · %{customdata[1]}<br>"
+                "Sector: %{customdata[2]}<br>"
+                "Say-Do Score: <b>%{y:.1f}/100</b> (Grade %{customdata[3]})<br>"
+                "Delivery Ratio: <b>%{customdata[4]:.2f}×</b><br>"
+                "Market Cap: <b>$%{customdata[5]:,}B</b><extra></extra>"
+            ),
+            showlegend=False,
+        ))
+
+    style_fig(
+        fig_matrix,
+        h=520,
+        xaxis_title="Revenue Delivery Ratio (Reported ÷ Guided Midpoint) →",
+        yaxis_title="Say-Do Credibility Score (0–100) →",
+        xaxis_range=[0.65, 1.40],
+        yaxis_range=[50, 94],
+        showlegend=False,
+    )
     st.plotly_chart(fig_matrix, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 

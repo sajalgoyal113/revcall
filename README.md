@@ -4,6 +4,8 @@
 &nbsp;&nbsp;
 [![GitHub Repo](https://img.shields.io/badge/GitHub-sajalgoyal113%2Frevcall-181717?style=flat&logo=github)](https://github.com/sajalgoyal113/revcall)
 &nbsp;&nbsp;
+[![Meta Model API](https://img.shields.io/badge/Meta%20AI-Meta%20Model%20API%20%28Muse%20Spark%29-0081FB?style=flat&logo=meta)](https://api.meta.ai)
+&nbsp;&nbsp;
 [![Audited Universe](https://img.shields.io/badge/Universe-50%20US%20Titans-10b981?style=flat)](data/companies.json)
 &nbsp;&nbsp;
 [![Predictive ML](https://img.shields.io/badge/Model-HistGBDT%20%2B%20Bayesian%20MAP-a855f7?style=flat)](data/out/model.json)
@@ -60,11 +62,10 @@ Every quarterly earnings season, institutional investors anchor on forward manag
    ```bash
    streamlit run app.py
    ```
-   - 🔮 **Guidance Predictor & Hurdle Curve:** Point-in-time Bayesian calculator with dynamic sensitivity curves.
+   - 🔮 **Guidance Predictor & Hurdle Curve:** Point-in-time Bayesian calculator with dynamic sensitivity curves and Meta Muse strategic guidance briefings.
    - 🏆 **Credibility Leaderboard:** Master table with rank, Say-Do score, 80% CI, grades, and delivery ratios.
-   - 🔎 **Company Ledger & Forensic Memos:** Verbatim audit trail citing specific promise IDs and 10-Q evidence quotes.
-   - 🎙️ **Live Concall Analyzer:** Extract verbatim commitments from transcripts and score delivery probability in real-time.
-   - 🧪 **Model Validation & Market Alpha:** Out-of-fold calibration curves, feature importances, 2×2 strategic matrix, and PEAD event study.
+   - 🔎 **Company Ledger & Meta Muse Memos:** Verbatim audit trail citing specific promise IDs and 10-Q evidence quotes, with live real-time synthesis powered by Meta Muse Spark (`muse-spark-1.3` via Meta Model API).
+   - 🧪 **Model Validation & Market Alpha:** Out-of-sample calibration curves, feature importances, redesigned interactive 2×2 strategic matrix with cohort highlighting, and PEAD event study.
 
 2. **Standalone HTML 16:9 Presentation Deck:**
    Available locally at [`us_earnings_presentation.html`](us_earnings_presentation.html).
