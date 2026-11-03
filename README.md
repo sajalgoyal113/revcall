@@ -1,4 +1,4 @@
-# 🎯 RevCall · Wall Street Guidance Forensics & Delivery Predictor
+# 🎯 Guidance Credibility for Wall Street Stocks
 
 [![Streamlit App](https://img.shields.io/badge/Streamlit%20Cloud-Live%20App-ff4b4b?style=flat&logo=streamlit)](https://revcall.streamlit.app/)
 &nbsp;&nbsp;
@@ -10,11 +10,11 @@
 &nbsp;&nbsp;
 [![Predictive ML](https://img.shields.io/badge/Model-HistGBDT%20%2B%20Bayesian%20MAP-a855f7?style=flat)](data/out/model.json)
 &nbsp;&nbsp;
-[![Tests Passing](https://img.shields.io/badge/Tests-17%2F17%20Passing-emerald?style=flat)](tests/)
+[![Tests Passing](https://img.shields.io/badge/Tests-20%2F20%20Passing-emerald?style=flat)](tests/)
 &nbsp;&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Auditing what corporate executive teams promise on quarterly earnings calls (SAY) against what they actually deliver in subsequent SEC 10-Q filings and concalls (DO) across the 50 most famous US market leaders.**
+**Auditing what corporate executive teams promise on quarterly earnings calls (SAY) against what they actually deliver in subsequent SEC 10-Q filings and concalls (DO) across the 50 most famous US market leaders — powered by Meta Muse AI & Bayesian Forensics.**
 
 ---
 

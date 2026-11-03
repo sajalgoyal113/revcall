@@ -1,6 +1,6 @@
-"""RevCall · Wall Street Guidance Forensics & Delivery Prediction Engine.
+"""Guidance Credibility for Wall Street Stocks · US Earnings Forensics & Delivery Prediction Engine.
 
-Audits what US management teams promise on quarterly earnings calls (SAY) against what
+Audits what US corporate management teams promise on quarterly earnings calls (SAY) against what
 they actually deliver in subsequent SEC 10-Q filings and concalls (DO), and predicts
 the probability that new forward-looking guidance will be held across 50 US market leaders.
 
@@ -31,7 +31,7 @@ except ImportError:
     import meta_api
 
 st.set_page_config(
-    page_title="RevCall · US Corporate Guidance Forensics & Predictor",
+    page_title="Guidance Credibility for Wall Street Stocks · AI Earnings Forensics",
     page_icon="🎯",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -343,6 +343,46 @@ st.markdown(
     color: #0F172A !important;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
+
+/* Concall Quote & Intel Styling */
+.concall-quote-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-left: 4px solid #2563EB;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 12px 0;
+}
+.concall-speaker-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1E40AF;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.concall-quote-text {
+    font-size: 13.5px;
+    color: #0F172A;
+    font-style: italic;
+    line-height: 1.6;
+}
+.intel-chip {
+    background: #FAF9F6;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 7px 11px;
+    margin-bottom: 7px;
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.45;
+}
+.intel-chip b {
+    color: #0F172A;
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -420,8 +460,8 @@ by_t = {c["ticker"]: c for c in scores["companies"]}
 # SIDEBAR — Model Configuration & Pre-Computed Engine
 # ---------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("### 🎯 RevCall Configuration")
-    st.caption("Meta Global AI Hackathon Edition")
+    st.markdown("### 🎯 Guidance Credibility Engine")
+    st.caption("Meta Global AI Hackathon Edition · Wall Street Forensics")
 
     selected_model_id = "muse-spark-1.3"
 
@@ -507,17 +547,16 @@ st.markdown(
     f"""
 <div class="revcon-hero">
   <div class="revcon-hero-left">
-    <div class="revcon-eyebrow">⚡ Pure-NumPy HistGBDT · Beta-Binomial Bayesian Credibility · SEC 10-Q Audited</div>
-    <h1 class="revcon-title">RevCall · Wall Street Guidance Credibility &amp; Predictor</h1>
+    <div class="revcon-eyebrow">⚡ Meta Muse AI · Pure-NumPy HistGBDT · SEC 10-Q Audited Forensics</div>
+    <h1 class="revcon-title">Guidance Credibility for Wall Street Stocks</h1>
     <p class="revcon-sub">
-      Auditing what corporate executives promise on quarterly earnings calls (<b>SAY</b>) against SEC 10-Q filings and
-      subsequent concalls (<b>DO</b>) across 50 US market leaders to predict whether new forward guidance will actually hold.
+      Auditing corporate earnings concall commitments (<b>SAY</b>) against SEC 10-Q filing deliveries (<b>DO</b>) across 50 US market leaders — powered by Meta Muse AI &amp; Bayesian Forensics.
     </p>
   </div>
   <div class="revcon-badges">
     <div class="revcon-stat-chip"><div class="num">50</div><div class="lbl">US Titans</div></div>
     <div class="revcon-stat-chip"><div class="num">$35.4T</div><div class="lbl">Market Cap</div></div>
-    <div class="revcon-stat-chip"><div class="num">{len(resolved)}</div><div class="lbl">Quotes Audited</div></div>
+    <div class="revcon-stat-chip"><div class="num">{len(resolved)}</div><div class="lbl">Audited Commitments</div></div>
     <div class="revcon-stat-chip"><div class="num">+{market.get('spread_pct', 7.51):.2f}%</div><div class="lbl">60d Alpha</div></div>
     <div class="revcon-stat-chip"><div class="num">{model.get('roc_auc', 0.775):.3f}</div><div class="lbl">ROC AUC</div></div>
   </div>
@@ -527,87 +566,289 @@ st.markdown(
 )
 
 tab_pred, tab_board, tab_co, tab_val = st.tabs([
-    "🔮 Guidance Predictor & Hurdle Curve",
+    "🔮 Guidance Credibility & Latest Concall Forensics",
     "🏆 Credibility Leaderboard",
     "🔎 Company Ledger & Meta Muse Memo",
     "🧪 Model Validation & Alpha",
 ])
 
 # ===========================================================================
-# TAB 1: GUIDANCE PREDICTOR & HURDLE CURVE
+# TAB 1: GUIDANCE CREDIBILITY & LATEST CONCALL FORENSICS
 # ===========================================================================
 with tab_pred:
     tickers_list = sorted([c["ticker"] for c in scores["companies"]])
-    ctrl_col, form_col = st.columns([1.05, 1.95], gap="large")
 
-    with ctrl_col:
+    # Session state initialization for chosen ticker
+    if "pred_active_ticker" not in st.session_state:
+        st.session_state["pred_active_ticker"] = "NVDA"
+
+    # Quick Ticker Selection Row
+    st.markdown('<div style="font-size:12px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">⚡ Quick Select Mega-Cap Leaders</div>', unsafe_allow_html=True)
+    popular_quick = ["NVDA", "MSFT", "AAPL", "GOOGL", "AMZN", "META", "TSLA", "PLTR", "AMD", "INTC"]
+    q_cols = st.columns(len(popular_quick))
+    for i, q_sym in enumerate(popular_quick):
+        is_active = (st.session_state["pred_active_ticker"] == q_sym)
+        btn_type = "primary" if is_active else "secondary"
+        if q_cols[i].button(q_sym, key=f"qbtn_{q_sym}", type=btn_type, use_container_width=True):
+            st.session_state["pred_active_ticker"] = q_sym
+            st.rerun()
+
+    # Searchable Selectbox synced with session state
+    curr_index = tickers_list.index(st.session_state["pred_active_ticker"]) if st.session_state["pred_active_ticker"] in tickers_list else 0
+
+    def format_co_option(t):
+        info = by_t.get(t, {})
+        return f"{t} — {info.get('name', t)} ({info.get('sector', 'Tech')} · ${info.get('market_cap', 0):,}B)"
+
+    chosen_ticker = st.selectbox(
+        "Select US Stock to Audit",
+        tickers_list,
+        index=curr_index,
+        format_func=format_co_option,
+        key="pred_chosen_ticker_box",
+    )
+    if chosen_ticker != st.session_state["pred_active_ticker"]:
+        st.session_state["pred_active_ticker"] = chosen_ticker
+        st.rerun()
+
+    chosen_ticker = st.session_state["pred_active_ticker"]
+    co_info = by_t.get(chosen_ticker, {})
+    co_grade = co_info.get("grade", "A")
+    c_proms = [p for p in resolved if p["ticker"] == chosen_ticker]
+    c_proms_sorted = sorted(c_proms, key=lambda x: x.get("call_date", ""), reverse=True)
+    latest_prom = c_proms_sorted[0] if c_proms_sorted else {}
+    past_incidents = c_proms_sorted[1:] if len(c_proms_sorted) > 1 else c_proms_sorted
+
+    deliv_ratio = co_info.get("delivery_ratio", 1.0)
+    score_val = co_info.get("score", 75.0)
+    ghost_pct = co_info.get("ghost_rate", 0.0) * 100
+    goalpost_moves = co_info.get("goalpost_moves", 0)
+
+    # Credibility archetype classification
+    if deliv_ratio >= 1.01 and ghost_pct <= 5.0:
+        archetype_label = "🟢 Conservative Sandbagger · High Guidance Credibility"
+        archetype_style = f"background:{EMERALD_BG};color:#065F46;border:1px solid #A7F3D0;"
+    elif deliv_ratio >= 0.98:
+        archetype_label = "🔵 Disciplined Predictor · Low Guidance Variance"
+        archetype_style = f"background:{COBALT_LIGHT};color:#1E40AF;border:1px solid #BFDBFE;"
+    else:
+        archetype_label = "🔴 Stretch Over-Promiser · Elevated Slippage Risk"
+        archetype_style = f"background:{ROSE_BG};color:#9F1239;border:1px solid #FECDD3;"
+
+    # 1. Company Executive Snapshot Header Card
+    st.markdown(
+        f"""
+        <div class="section-card" style="padding:16px 20px;margin-bottom:18px;background:linear-gradient(135deg, #FFFFFF 0%, #FAF9F6 100%);">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F1F5F9;">
+            <div>
+              <span style="font-size:21px;font-weight:800;color:#0F172A;font-family:'Plus Jakarta Sans',sans-serif;">{co_info.get('name', chosen_ticker)} ({chosen_ticker})</span>
+              <span style="font-size:13px;color:#64748B;margin-left:8px;">{co_info.get('sector', 'Tech')} · Market Cap: <b>${co_info.get('market_cap', 0):,}B</b></span>
+              <br><span style="font-size:12.5px;color:#475569;">Leadership: <b>{co_info.get('ceo', 'CEO')}</b> (CEO) &amp; <b>{co_info.get('cfo', 'CFO')}</b> (CFO)</span>
+            </div>
+            <div>
+              <span class="status-pill" style="{archetype_style};font-size:12px;padding:6px 14px;">{archetype_label}</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;">
+            <div style="background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;">
+              <div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;">SAY-DO SCORE</div>
+              <div style="font-size:22px;font-weight:800;color:#0F172A;margin-top:2px;">{score_val:.1f} / 100</div>
+              <div style="font-size:11.5px;color:#059669;font-weight:600;">Grade {co_grade} · 80% CI: {co_info.get('ci80', [score_val-5, score_val+5])[0]:.0f}–{co_info.get('ci80', [score_val-5, score_val+5])[1]:.0f}</div>
+            </div>
+            <div style="background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;">
+              <div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;">DELIVERY RATIO</div>
+              <div style="font-size:22px;font-weight:800;color:{EMERALD if deliv_ratio >= 1.0 else ROSE};margin-top:2px;">{deliv_ratio:.2f}×</div>
+              <div style="font-size:11.5px;color:#475569;">Delivered ÷ Guided on 10-Qs</div>
+            </div>
+            <div style="background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;">
+              <div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;">HISTORICAL BEAT RATE</div>
+              <div style="font-size:22px;font-weight:800;color:#0F172A;margin-top:2px;">{stats.get('base_rate', 78.4):.1f}%</div>
+              <div style="font-size:11.5px;color:#475569;">{co_info.get('outcomes', {}).get('DELIVERED', len(past_incidents))} verified 10-Q deliveries</div>
+            </div>
+            <div style="background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;">
+              <div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;">SLIPPAGE / GHOST RISK</div>
+              <div style="font-size:22px;font-weight:800;color:{EMERALD if ghost_pct == 0 else AMBER};margin-top:2px;">{ghost_pct:.1f}%</div>
+              <div style="font-size:11.5px;color:#475569;">{goalpost_moves} goalpost moves on record</div>
+            </div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # 2. Main Two-Column Hub: Concall Guidance Intelligence vs Meta Muse Audit
+    col_concall, col_muse = st.columns([1.1, 1.35], gap="large")
+
+    base_val = float(latest_prom.get("value_high") or latest_prom.get("value_low") or (37.5 if chosen_ticker == "NVDA" else 50.0))
+    unit_str = latest_prom.get("unit", "Billion USD")
+
+    with col_concall:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">1 · Select US Stock & Track Record</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">Point-in-time delivery profile prior to next call</div>', unsafe_allow_html=True)
-
-        chosen_ticker = st.selectbox(
-            "US Stock Ticker",
-            tickers_list,
-            index=tickers_list.index("NVDA") if "NVDA" in tickers_list else 0,
-            key="pred_chosen_ticker",
-        )
-        co_info = by_t.get(chosen_ticker, {})
-        co_grade = co_info.get("grade", "A")
-
+        st.markdown('<div class="section-title">🎙️ 1 · Latest Earnings Call & Active Guidance</div>', unsafe_allow_html=True)
         st.markdown(
-            f'<div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0 12px 0;padding:10px 14px;background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;">'
-            f'<div><span style="font-size:12px;color:#64748B;font-weight:600;">SAY-DO CREDIBILITY SCORE</span><br>'
-            f'<span style="font-size:22px;font-weight:800;color:#0F172A;font-family:\'Plus Jakarta Sans\',sans-serif;">{co_info.get("score", 87.9):.1f} / 100</span></div>'
-            f'<span class="status-pill" style="{grade_pill_style(co_grade)};font-size:13px;padding:5px 12px;">Grade {co_grade}</span>'
-            f"</div>",
+            f'<div style="font-size:12.5px;color:#64748B;margin-bottom:10px;">'
+            f'<b>Call:</b> {latest_prom.get("call_label", "Latest Quarterly Call")} ({latest_prom.get("call_date", "Recent")})<br>'
+            f'<b>Speaker:</b> {latest_prom.get("speaker", co_info.get("cfo", "CFO"))} ({latest_prom.get("role", "Executive")})'
+            f'</div>',
             unsafe_allow_html=True,
         )
 
-        st.markdown(f"- **Company:** {co_info.get('name', chosen_ticker)} ({co_info.get('sector', 'Tech')})")
-        st.markdown(f"- **Leadership:** {co_info.get('ceo', 'CEO')} (CEO), {co_info.get('cfo', 'CFO')} (CFO)")
-        st.markdown(f"- **Market Cap:** **${co_info.get('market_cap', 0):,} Billion**")
-        st.markdown(f"- **Wall Street Delivery Ratio:** **{co_info.get('delivery_ratio', 1.0):.2f}×** of guided")
-        st.markdown(f"- **👻 Ghost Rate:** **{co_info.get('ghost_rate', 0)*100:.1f}%** ({co_info.get('outcomes', {}).get('GHOSTED', 0)} dropped)")
+        st.markdown(
+            f"""
+            <div class="concall-quote-box">
+              <div class="concall-speaker-tag">🗣️ Verbatim Executive Guidance Quote ({latest_prom.get('speaker', 'Management')}):</div>
+              <div class="concall-quote-text">“{latest_prom.get('quote', 'Management forward guidance statement issued on call.')}”</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            f'<div style="padding:10px 14px;background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:14px;">'
+            f'<div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;">ACTIVE CONCALL COMMITMENT</div>'
+            f'<div style="font-size:14px;font-weight:700;color:#0F172A;margin-top:2px;">{latest_prom.get("summary", "Quarterly forward target")}</div>'
+            f'<div style="font-size:12px;color:#475569;margin-top:2px;">Category: <b>{latest_prom.get("category", "revenue_target").replace("_", " ").title()}</b> · Horizon: <b>{latest_prom.get("period", "Next Quarter")}</b></div>'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.markdown('<div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:6px;">🎯 Guidance Target &amp; Sensitivity Scenario</div>', unsafe_allow_html=True)
+        sc_opts = [
+            f"Guidance Midpoint (${base_val:g} {unit_str})",
+            f"Bull Case +5% (${base_val * 1.05:.2f} {unit_str})",
+            f"Stretch Target +10% (${base_val * 1.10:.2f} {unit_str})",
+            "Custom Sensitivity Slider",
+        ]
+        scenario = st.radio("Guidance Scenario to Audit", sc_opts, index=0, key=f"pred_sc_{chosen_ticker}")
+        if "Custom" in scenario:
+            min_v = max(0.1, round(base_val * 0.7, 1))
+            max_v = round(base_val * 1.35, 1)
+            step_v = max(0.1, round(base_val * 0.01, 1))
+            guided_val = st.slider("Simulate Guided Target", min_v, max_v, base_val, step=step_v, key=f"pred_slider_{chosen_ticker}")
+        elif "+5%" in scenario:
+            guided_val = round(base_val * 1.05, 2)
+        elif "+10%" in scenario:
+            guided_val = round(base_val * 1.10, 2)
+        else:
+            guided_val = base_val
+
+        st.write("")
+        st.markdown('<div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:6px;">🌐 Live Financial Media &amp; Internet Disclosures</div>', unsafe_allow_html=True)
+
+        cache_key_web = f"web_intel_{chosen_ticker}"
+        if cache_key_web not in st.session_state:
+            st.session_state[cache_key_web] = meta_api.fetch_web_earnings_intel(chosen_ticker, co_info.get("name"), max_articles=3)
+        web_intel = st.session_state[cache_key_web]
+
+        if web_intel:
+            for art in web_intel[:3]:
+                st.markdown(
+                    f'<div class="intel-chip">📰 <b>{art.get("source", "Media")}:</b> {art.get("title", "")} '
+                    f'<span style="color:#64748B;font-size:11px;">({art.get("date", "")})</span></div>',
+                    unsafe_allow_html=True,
+                )
+        else:
+            st.caption("Latest web disclosures: SEC Form 10-Q & consensus Wall Street earnings call transcripts.")
+
+        if st.button("🔄 Refresh Live Internet News", key=f"btn_refresh_web_{chosen_ticker}"):
+            st.session_state[cache_key_web] = meta_api.fetch_web_earnings_intel(chosen_ticker, co_info.get("name"), max_articles=4)
+            st.rerun()
+
         st.markdown("</div>", unsafe_allow_html=True)
 
-    with form_col:
+    with col_muse:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">2 · Configure Forward Guidance Statement</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">Simulate forward revenue target, ambition stretch, and executive tone</div>', unsafe_allow_html=True)
+        m_top1, m_top2 = st.columns([1.6, 1.0])
+        with m_top1:
+            st.markdown('<div class="section-title">⚡ 2 · Meta Muse Brief &amp; Guidance Reliability Audit</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-caption">AI concall synthesis &amp; forensic reliability audit via Meta Muse (<code>{selected_model_id}</code>).</div>', unsafe_allow_html=True)
+        with m_top2:
+            force_regen = st.button("✨ Re-Analyze Live", key=f"btn_regen_{chosen_ticker}", type="primary", use_container_width=True)
 
-        f1, f2, f3 = st.columns(3)
-        g_cat = f1.selectbox("Guidance Category", ["Quarterly Revenue ($B)", "YoY Revenue Growth (%)", "Operating Margin (%)", "Capex Budget ($B)"], key="pred_g_cat")
-        default_val = 37.5 if chosen_ticker == "NVDA" else (25.0 if chosen_ticker == "TSLA" else 64.0)
-        g_val = f2.number_input("Guided Value", value=float(default_val), step=1.0, key="pred_g_val")
-        g_horizon = f3.selectbox("Horizon", ["Q+1 (Next Quarter)", "Full Year (12M)", "Multi-Year (24M)"], key="pred_g_horizon")
+        cache_key_brief = f"muse_brief_{chosen_ticker}"
+        if force_regen or cache_key_brief not in st.session_state:
+            with st.spinner(f"Synthesizing with Meta Muse ({selected_model_id})..."):
+                b_res = meta_api.generate_meta_concall_reliability_brief(
+                    ticker=chosen_ticker,
+                    company_meta=co_info,
+                    company_score=co_info,
+                    latest_promise=latest_prom,
+                    past_promises=past_incidents,
+                    web_articles=web_intel,
+                    api_key=active_meta_key,
+                    model=selected_model_id,
+                )
+                st.session_state[cache_key_brief] = b_res
 
-        f4, f5 = st.columns(2)
-        g_strength = f4.selectbox("Commitment Firmness", ["Firm Commitment ('We will deliver...')", "Target ('Guiding / Targeting...')", "Hedged / Aspirational ('Subject to...')"], key="pred_g_strength")
-        g_speaker = f5.selectbox("Executive Speaker", [f"{co_info.get('ceo')} (CEO)", f"{co_info.get('cfo')} (CFO)"], key="pred_g_speaker")
+        b_res = st.session_state[cache_key_brief]
+        is_live = b_res.get("is_live", False)
+        status_tag = f"🟢 LIVE META MODEL API ({selected_model_id})" if is_live else f"⚡ VERIFIED SEC 10-Q FORENSIC AUDIT (Pre-Computed · {selected_model_id})"
+        tag_color = "#047857" if is_live else "#1E40AF"
+        tag_bg = "#ECFDF5" if is_live else "#EFF6FF"
 
-        g_quote = st.text_area(
-            "Verbatim Guidance Quote",
-            value=f"For the upcoming period, we expect total revenue of approximately ${g_val:g} billion, reflecting solid operational execution across our core platforms.",
-            height=60,
-            key="pred_g_quote",
+        st.markdown(
+            f'<div style="display:inline-block;padding:3px 11px;background:{tag_bg};border:1px solid #CBD5E1;border-radius:999px;font-size:11px;font-weight:700;color:{tag_color};margin-bottom:10px;">{status_tag}</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #E2E8F0;border-left:4px solid {tag_color};border-radius:10px;max-height:480px;overflow-y:auto;font-size:13.5px;line-height:1.6;">'
+            f'{b_res.get("content", "")}'
+            f'</div>',
+            unsafe_allow_html=True,
         )
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Predictions
-    deliv_ratio = co_info.get("delivery_ratio", 1.0)
-    base_prob = co_info.get("score", 87.9) / 100.0
-    tone_mult = 1.04 if "Firm" in g_strength else (0.98 if "Target" in g_strength else 0.85)
-    horizon_mult = 1.0 if "Q+1" in g_horizon else (0.93 if "Full Year" in g_horizon else 0.78)
-    p_kept = float(np.clip(base_prob * tone_mult * horizon_mult - co_info.get("ghost_rate", 0) * 0.4, 0.15, 0.98))
+    # 3. Audited Past Guidance Incidents Ledger (The Historical Evidence)
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">📜 Audited Past Guidance Incidents for {chosen_ticker}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="section-caption">'
+        f'Point-in-time concall guidance promises matched with subsequent SEC Form 10-Q deliveries for <b>{co_info.get("name", chosen_ticker)}</b>. '
+        f'Demonstrates why {chosen_ticker} carries a <b>{deliv_ratio:.2f}×</b> historical delivery ratio and a <b>{score_val:.1f}/100</b> Say-Do Score.'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
 
-    adj_target = g_val * deliv_ratio
+    for p in past_incidents[:5]:
+        r = p.get("resolution", {})
+        outcome = r.get("outcome", "DELIVERED")
+        ratio_val = r.get("ratio")
+        ratio_badge = f"({ratio_val:.2f}× of target)" if ratio_val is not None else ""
+        icon = ICON.get(outcome, "✓")
+        pill_style = STATUS_BADGE_STYLE.get(outcome, "")
+
+        with st.expander(f"{icon} [{p.get('call_label', 'Prior Quarter')}] {p.get('summary', '')} → {outcome} {ratio_badge}", expanded=(outcome != "DELIVERED")):
+            st.markdown(
+                f'<span class="status-pill" style="{pill_style}">{icon} {outcome}</span> &nbsp; '
+                f'<b>Metric:</b> {p.get("category", "").replace("_", " ").title()} · '
+                f'<b>Horizon:</b> {p.get("period", "-")} · '
+                f'<b>Speaker:</b> {p.get("speaker", "Exec")} ({p.get("role", "")})',
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                f'<div class="say-box">🗣️ <b>WHAT MANAGEMENT PROMISED ({p.get("speaker", "Exec")}):</b><br>“{p.get("quote", "")}”</div>',
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                f'<div class="do-box">📊 <b>SEC 10-Q AUDITED RESOLUTION ({outcome} · {ratio_badge}):</b> {r.get("why", "Delivered")}<br>'
+                f'<span style="color:#64748B;font-size:12px;">Evidence Quote: “{r.get("evidence_quote", "Confirmed in 10-Q filings")}”</span></div>',
+                unsafe_allow_html=True,
+            )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # 4. Quantitative Bayesian Probability & Hurdle Curve
+    stretch_ratio = guided_val / base_val if base_val > 0 else 1.0
+    base_prob = score_val / 100.0
+    p_kept = float(np.clip(base_prob * (1.02 if deliv_ratio >= 1.0 else 0.90) - (stretch_ratio - 1.0) * 1.4 - co_info.get("ghost_rate", 0) * 0.35, 0.10, 0.98))
+    adj_target = guided_val * deliv_ratio
     pred_grade = "A" if p_kept >= 0.80 else ("B" if p_kept >= 0.68 else ("C" if p_kept >= 0.55 else "D"))
 
     k_cols = st.columns(4, gap="medium")
     render_kpi(k_cols[0], "Predicted P(Guidance Held)", f"{p_kept:.1%}", f"Credibility Grade <b>{pred_grade}</b> · Calibrated", grade_color(pred_grade))
-    render_kpi(k_cols[1], "Credibility-Adjusted Target", f"${g_val:g}B → ${adj_target:.2f}B", f"Adjusted for {deliv_ratio:.2f}× historical delivery ratio", COBALT)
+    render_kpi(k_cols[1], "Credibility-Adjusted Target", f"${guided_val:g} → ${adj_target:.2f} {unit_str}", f"Adjusted for {deliv_ratio:.2f}× historical delivery ratio", COBALT)
     render_kpi(k_cols[2], "Historical Delivery Ratio", f"{deliv_ratio:.2f}×", "Delivered ÷ Guided on past commitments", EMERALD if deliv_ratio >= 1.0 else ROSE)
-    render_kpi(k_cols[3], "Ghost & Slippage Risk", f"{co_info.get('ghost_rate', 0)*100:.1f}%", f"{co_info.get('goalpost_moves', 0)} goalpost moves on record", AMBER if co_info.get('ghost_rate', 0) > 0 else EMERALD)
+    render_kpi(k_cols[3], "Ghost & Slippage Risk", f"{ghost_pct:.1f}%", f"{goalpost_moves} goalpost moves on record", AMBER if ghost_pct > 0 else EMERALD)
 
     st.write("")
 
@@ -616,11 +857,11 @@ with tab_pred:
     with h_col1:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown(f'<div class="section-title">📈 Guidance Hurdle Survival Curve — {chosen_ticker}</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">How delivery probability degrades as guidance stretches above trailing run-rate</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-caption">How delivery probability decays as guidance stretches above trailing run-rate</div>', unsafe_allow_html=True)
 
         steps = 11
         spreads = np.linspace(0.85, 1.25, steps)
-        x_pts = [round(g_val * s, 1) for s in spreads]
+        x_pts = [round(guided_val * s, 1) for s in spreads]
         y_pts = [float(np.clip(p_kept * (1.0 - (s - 1.0) * 1.8), 0.1, 0.98)) * 100 for s in spreads]
 
         fig_h = go.Figure()
@@ -633,15 +874,15 @@ with tab_pred:
             fill="tozeroy", fillcolor="rgba(37, 99, 235, 0.07)",
             line=dict(color=COBALT, width=3.2, shape="spline"),
             marker=dict(size=7.5, color=COBALT, line=dict(color="#FFFFFF", width=1.5)),
-            hovertemplate="<b>Guided Value:</b> $%{x:g}B<br><b>P(Held):</b> %{y:.1f}%<extra></extra>",
+            hovertemplate=f"<b>Guided Target:</b> $%{{x:g}} {unit_str}<br><b>P(Held):</b> %{{y:.1f}}%<extra></extra>",
         ))
         fig_h.add_trace(go.Scatter(
-            x=[g_val], y=[p_kept * 100], mode="markers", name="Selected",
+            x=[guided_val], y=[p_kept * 100], mode="markers", name="Selected",
             marker=dict(size=14, color=grade_color(pred_grade), symbol="diamond", line=dict(color="#FFFFFF", width=2)),
-            hovertemplate=f"<b>Selected Target:</b> ${g_val:g}B<br><b>P(Held):</b> {p_kept:.1%}<extra></extra>",
+            hovertemplate=f"<b>Selected Target:</b> ${guided_val:g} {unit_str}<br><b>P(Held):</b> {p_kept:.1%}<extra></extra>",
         ))
 
-        style_fig(fig_h, h=330, margin=dict(l=52, r=28, t=24, b=46), xaxis_title="Guided Revenue ($B)", yaxis_title="Probability Held (%)", yaxis_range=[0, 100], showlegend=False)
+        style_fig(fig_h, h=330, margin=dict(l=52, r=28, t=24, b=46), xaxis_title=f"Guided Value ({unit_str})", yaxis_title="Probability Held (%)", yaxis_range=[0, 100], showlegend=False)
         st.plotly_chart(fig_h, use_container_width=True, key="chart_pred_hurdle")
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -649,63 +890,15 @@ with tab_pred:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">🎯 Execution Tipping Points</div>', unsafe_allow_html=True)
         st.markdown('<div class="section-caption">Calibrated thresholds for portfolio risk-management</div>', unsafe_allow_html=True)
-        st.markdown(f"- **Current Guidance Point:** `${g_val:g} Billion`")
-        st.markdown(f"- **🟢 High-Conviction Ceiling (P ≥ 70%):** up to `${g_val * 1.02:.1f}B`")
-        st.markdown(f"- **🟡 Coin-Flip Hurdle (P ≥ 50%):** `${g_val * 1.10:.1f}B`")
-        st.markdown(f"- **🔴 Breakdown Risk Threshold (P < 45%):** above `${g_val * 1.15:.1f}B`")
+        st.markdown(f"- **Current Guidance Point:** `${guided_val:g} {unit_str}`")
+        st.markdown(f"- **🟢 High-Conviction Ceiling (P ≥ 70%):** up to `${guided_val * 1.02:.1f} {unit_str}`")
+        st.markdown(f"- **🟡 Coin-Flip Hurdle (P ≥ 50%):** `${guided_val * 1.10:.1f} {unit_str}`")
+        st.markdown(f"- **🔴 Breakdown Risk Threshold (P < 45%):** above `${guided_val * 1.15:.1f} {unit_str}`")
         st.markdown("---")
-        st.markdown(f"**Historical Precedents for `{chosen_ticker}`:**")
-        c_proms = [p for p in resolved if p["ticker"] == chosen_ticker]
-        for p in c_proms[:3]:
-            st.markdown(f"- `{p['call_date']}`: {p['summary'][:45]} → **{p['resolution']['outcome']}**")
+        st.markdown(f"**Historical Delivery Multiplier:** `{deliv_ratio:.2f}×`")
+        st.markdown(f"**Credibility-Adjusted Target:** `${adj_target:.2f} {unit_str}`")
+        st.markdown(f"**Ghost / Dropped Risk:** `{ghost_pct:.1f}%`")
         st.markdown("</div>", unsafe_allow_html=True)
-
-    # Meta Muse Strategic Guidance Briefing
-    st.markdown('<div class="section-card" style="margin-top:16px;">', unsafe_allow_html=True)
-    sb_c1, sb_c2 = st.columns([2.2, 1.2])
-    with sb_c1:
-        st.markdown(
-            f'<div class="section-title">⚡ Meta Muse Strategic Guidance Briefing</div>'
-            f'<div class="section-caption">Synthesizes an institutional Wall Street assessment of {chosen_ticker}\'s ${g_val:g}B guide using Meta Model API (<code>{selected_model_id}</code>).</div>',
-            unsafe_allow_html=True,
-        )
-    with sb_c2:
-        run_briefing = st.button("✨ Generate Meta Muse Briefing", key="btn_run_briefing", type="primary")
-
-    if run_briefing:
-        with st.spinner(f"Evaluating with Meta Muse ({selected_model_id})..."):
-            b_res = meta_api.generate_meta_guidance_analysis(
-                ticker=chosen_ticker,
-                company_info=co_info,
-                guided_cat=g_cat,
-                guided_val=g_val,
-                horizon=g_horizon,
-                firmness=g_strength,
-                quote=g_quote,
-                p_held=p_kept,
-                adj_target=f"${adj_target:.2f}B",
-                api_key=active_meta_key,
-                model=selected_model_id,
-            )
-            if b_res["success"]:
-                st.markdown(
-                    f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #BFDBFE;border-left:4px solid #2563EB;border-radius:10px;margin-top:10px;">'
-                    f'<div style="font-size:12px;font-weight:700;color:#1E40AF;margin-bottom:6px;">🟢 META MUSE SPARK STRATEGIC ASSESSMENT ({selected_model_id})</div>'
-                    f'<div style="font-size:13.5px;color:#0F172A;line-height:1.6;">{b_res["content"]}</div>'
-                    f'</div>',
-                    unsafe_allow_html=True,
-                )
-            else:
-                st.markdown(
-                    f'<div style="padding:14px 18px;background:#FAF9F6;border:1px solid #E2E8F0;border-left:4px solid #059669;border-radius:10px;margin-top:10px;">'
-                    f'<div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:6px;">⚡ PRE-COMPUTED INSTITUTIONAL BRIEFING ({chosen_ticker})</div>'
-                    f'<p style="font-size:13.5px;color:#334155;margin:0 0 8px 0;"><b>Probability &amp; Track Record:</b> {chosen_ticker} carries a <b>{co_info.get("score"):.1f}/100 Say-Do Score (Grade {co_info.get("grade")})</b> with an average delivery ratio of <b>{deliv_ratio:.2f}×</b>. The model assigns a <b>{p_kept:.1%}</b> survival probability to this guidance target.</p>'
-                    f'<p style="font-size:13.5px;color:#334155;margin:0 0 8px 0;"><b>Sandbagging vs Stretch:</b> Management\'s guided target of ${g_val:g}B projects to an audited delivery expectation of <b>${adj_target:.2f}B</b> based on historical 10-Q reconciliations.</p>'
-                    f'<p style="font-size:12px;color:#64748B;margin:0;"><i>Note: Enter your Meta Model API Key in the sidebar to run live real-time generation on arbitrary guidance texts.</i></p>'
-                    f'</div>',
-                    unsafe_allow_html=True,
-                )
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ===========================================================================
 # TAB 2: CREDIBILITY LEADERBOARD
