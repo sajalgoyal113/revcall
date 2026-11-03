@@ -678,50 +678,93 @@ with tab_pred:
         unsafe_allow_html=True,
     )
 
-    # 2. Main Two-Column Hub: Concall Guidance Intelligence vs Meta Muse Audit
-    col_concall, col_muse = st.columns([1.1, 1.35], gap="large")
-
-    base_val = float(latest_prom.get("value_high") or latest_prom.get("value_low") or (37.5 if chosen_ticker == "NVDA" else 50.0))
+    # 2. Main Showcase: Meta Muse Concall Intelligence & Guidance Reliability Audit
+    base_val = float(latest_prom.get("value_high") or latest_prom.get("value_low") or (54.0 if chosen_ticker == "NVDA" else 50.0))
     unit_str = latest_prom.get("unit", "Billion USD")
 
-    with col_concall:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">🎙️ 1 · Latest Earnings Call & Active Guidance</div>', unsafe_allow_html=True)
-        st.markdown(
-            f'<div style="font-size:12.5px;color:#64748B;margin-bottom:10px;">'
-            f'<b>Call:</b> {latest_prom.get("call_label", "Latest Quarterly Call")} ({latest_prom.get("call_date", "Recent")})<br>'
-            f'<b>Speaker:</b> {latest_prom.get("speaker", co_info.get("cfo", "CFO"))} ({latest_prom.get("role", "Executive")})'
-            f'</div>',
-            unsafe_allow_html=True,
-        )
+    # Fetch/cache web intelligence
+    cache_key_web = f"web_intel_{chosen_ticker}"
+    if cache_key_web not in st.session_state:
+        st.session_state[cache_key_web] = meta_api.fetch_web_earnings_intel(chosen_ticker, co_info.get("name"), max_articles=4)
+    web_intel = st.session_state[cache_key_web]
 
-        st.markdown(
-            f"""
-            <div class="concall-quote-box">
-              <div class="concall-speaker-tag">🗣️ Verbatim Executive Guidance Quote ({latest_prom.get('speaker', 'Management')}):</div>
-              <div class="concall-quote-text">“{latest_prom.get('quote', 'Management forward guidance statement issued on call.')}”</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    m_head, m_actions = st.columns([1.6, 1.4])
+    with m_head:
+        st.markdown('<div class="section-title">⚡ Meta Muse Brief &amp; Guidance Reliability Audit</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-caption">Point-in-time concall synthesis &amp; forensic reliability audit powered by Meta Muse (<code>{selected_model_id}</code>).</div>', unsafe_allow_html=True)
+    with m_actions:
+        btn_c1, btn_c2 = st.columns(2)
+        with btn_c1:
+            force_regen = st.button("✨ Re-Analyze Live", key=f"btn_regen_{chosen_ticker}", type="primary", use_container_width=True)
+        with btn_c2:
+            if st.button("🔄 Refresh Web Intel", key=f"btn_web_ref_{chosen_ticker}", use_container_width=True):
+                st.session_state[cache_key_web] = meta_api.fetch_web_earnings_intel(chosen_ticker, co_info.get("name"), max_articles=4)
+                st.session_state.pop(f"muse_brief_{chosen_ticker}", None)
+                st.rerun()
 
-        st.markdown(
-            f'<div style="padding:10px 14px;background:#FAF9F6;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:14px;">'
-            f'<div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;">ACTIVE CONCALL COMMITMENT</div>'
-            f'<div style="font-size:14px;font-weight:700;color:#0F172A;margin-top:2px;">{latest_prom.get("summary", "Quarterly forward target")}</div>'
-            f'<div style="font-size:12px;color:#475569;margin-top:2px;">Category: <b>{latest_prom.get("category", "revenue_target").replace("_", " ").title()}</b> · Horizon: <b>{latest_prom.get("period", "Next Quarter")}</b></div>'
-            f'</div>',
-            unsafe_allow_html=True,
-        )
+    cache_key_brief = f"muse_brief_{chosen_ticker}"
+    if force_regen or cache_key_brief not in st.session_state:
+        with st.spinner(f"Synthesizing with Meta Muse ({selected_model_id})..."):
+            b_res = meta_api.generate_meta_concall_reliability_brief(
+                ticker=chosen_ticker,
+                company_meta=co_info,
+                company_score=co_info,
+                latest_promise=latest_prom,
+                past_promises=past_incidents,
+                web_articles=web_intel,
+                api_key=active_meta_key,
+                model=selected_model_id,
+            )
+            st.session_state[cache_key_brief] = b_res
 
-        st.markdown('<div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:6px;">🎯 Guidance Target &amp; Sensitivity Scenario</div>', unsafe_allow_html=True)
+    b_res = st.session_state[cache_key_brief]
+    brief_text = b_res.get("content")
+    is_live = b_res.get("is_live", False)
+    if not brief_text or str(brief_text).strip().lower() in ("none", "null", ""):
+        brief_text = meta_api._synthesize_deterministic_reliability_brief(
+            chosen_ticker, co_info, co_info, latest_prom, past_incidents, web_intel
+        )
+        is_live = False
+
+    status_tag = f"🟢 LIVE META MODEL API ({selected_model_id})" if is_live else f"⚡ VERIFIED SEC 10-Q FORENSIC AUDIT (Pre-Computed · {selected_model_id})"
+    tag_color = "#047857" if is_live else "#1E40AF"
+    tag_bg = "#ECFDF5" if is_live else "#EFF6FF"
+
+    st.markdown(
+        f'<div style="display:inline-block;padding:3px 12px;background:{tag_bg};border:1px solid #CBD5E1;border-radius:999px;font-size:11px;font-weight:700;color:{tag_color};margin-bottom:12px;">{status_tag}</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        f'<div style="padding:16px 20px;background:#F8FAFC;border:1px solid #E2E8F0;border-left:4px solid {tag_color};border-radius:12px;margin-bottom:6px;line-height:1.65;">',
+        unsafe_allow_html=True,
+    )
+    st.markdown(brief_text)
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # 3. Guidance Target Sensitivity Controller & Scenario Simulation
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🎯 Guidance Target &amp; Ambition Stretch Simulator</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="section-caption">'
+        f'Simulate forward guidance targets relative to management\'s stated <b>${base_val:g} {unit_str}</b> guidance to observe Bayesian survival decay below.'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
+
+    sc_c1, sc_c2 = st.columns([1.6, 1.4], gap="medium")
+    with sc_c1:
         sc_opts = [
             f"Guidance Midpoint (${base_val:g} {unit_str})",
-            f"Bull Case +5% (${base_val * 1.05:.2f} {unit_str})",
+            f"Bull Case Stretch +5% (${base_val * 1.05:.2f} {unit_str})",
             f"Stretch Target +10% (${base_val * 1.10:.2f} {unit_str})",
             "Custom Sensitivity Slider",
         ]
-        scenario = st.radio("Guidance Scenario to Audit", sc_opts, index=0, key=f"pred_sc_{chosen_ticker}")
+        scenario = st.radio("Guidance Scenario to Audit", sc_opts, index=0, key=f"pred_sc_{chosen_ticker}", horizontal=True)
+
+    with sc_c2:
         if "Custom" in scenario:
             min_v = max(0.1, round(base_val * 0.7, 1))
             max_v = round(base_val * 1.35, 1)
@@ -729,84 +772,15 @@ with tab_pred:
             guided_val = st.slider("Simulate Guided Target", min_v, max_v, base_val, step=step_v, key=f"pred_slider_{chosen_ticker}")
         elif "+5%" in scenario:
             guided_val = round(base_val * 1.05, 2)
+            st.info(f"Evaluating Bull Case: `${guided_val:.2f} {unit_str}` (+5.0% stretch above management midpoint).")
         elif "+10%" in scenario:
             guided_val = round(base_val * 1.10, 2)
+            st.warning(f"Evaluating Stretch Target: `${guided_val:.2f} {unit_str}` (+10.0% ambition stretch).")
         else:
             guided_val = base_val
+            st.success(f"Evaluating Stated Midpoint: `${guided_val:g} {unit_str}` as guided on latest quarterly concall.")
 
-        st.write("")
-        st.markdown('<div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:6px;">🌐 Live Financial Media &amp; Internet Disclosures</div>', unsafe_allow_html=True)
-
-        cache_key_web = f"web_intel_{chosen_ticker}"
-        if cache_key_web not in st.session_state:
-            st.session_state[cache_key_web] = meta_api.fetch_web_earnings_intel(chosen_ticker, co_info.get("name"), max_articles=3)
-        web_intel = st.session_state[cache_key_web]
-
-        if web_intel:
-            for art in web_intel[:3]:
-                st.markdown(
-                    f'<div class="intel-chip">📰 <b>{art.get("source", "Media")}:</b> {art.get("title", "")} '
-                    f'<span style="color:#64748B;font-size:11px;">({art.get("date", "")})</span></div>',
-                    unsafe_allow_html=True,
-                )
-        else:
-            st.caption("Latest web disclosures: SEC Form 10-Q & consensus Wall Street earnings call transcripts.")
-
-        if st.button("🔄 Refresh Live Internet News", key=f"btn_refresh_web_{chosen_ticker}"):
-            st.session_state[cache_key_web] = meta_api.fetch_web_earnings_intel(chosen_ticker, co_info.get("name"), max_articles=4)
-            st.rerun()
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with col_muse:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        m_top1, m_top2 = st.columns([1.6, 1.0])
-        with m_top1:
-            st.markdown('<div class="section-title">⚡ 2 · Meta Muse Brief &amp; Guidance Reliability Audit</div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="section-caption">AI concall synthesis &amp; forensic reliability audit via Meta Muse (<code>{selected_model_id}</code>).</div>', unsafe_allow_html=True)
-        with m_top2:
-            force_regen = st.button("✨ Re-Analyze Live", key=f"btn_regen_{chosen_ticker}", type="primary", use_container_width=True)
-
-        cache_key_brief = f"muse_brief_{chosen_ticker}"
-        if force_regen or cache_key_brief not in st.session_state:
-            with st.spinner(f"Synthesizing with Meta Muse ({selected_model_id})..."):
-                b_res = meta_api.generate_meta_concall_reliability_brief(
-                    ticker=chosen_ticker,
-                    company_meta=co_info,
-                    company_score=co_info,
-                    latest_promise=latest_prom,
-                    past_promises=past_incidents,
-                    web_articles=web_intel,
-                    api_key=active_meta_key,
-                    model=selected_model_id,
-                )
-                st.session_state[cache_key_brief] = b_res
-
-        b_res = st.session_state[cache_key_brief]
-        brief_text = b_res.get("content")
-        is_live = b_res.get("is_live", False)
-        if not brief_text or str(brief_text).strip().lower() in ("none", "null", ""):
-            brief_text = meta_api._synthesize_deterministic_reliability_brief(
-                chosen_ticker, co_info, co_info, latest_prom, past_incidents, web_intel
-            )
-            is_live = False
-
-        status_tag = f"🟢 LIVE META MODEL API ({selected_model_id})" if is_live else f"⚡ VERIFIED SEC 10-Q FORENSIC AUDIT (Pre-Computed · {selected_model_id})"
-        tag_color = "#047857" if is_live else "#1E40AF"
-        tag_bg = "#ECFDF5" if is_live else "#EFF6FF"
-
-        st.markdown(
-            f'<div style="display:inline-block;padding:3px 11px;background:{tag_bg};border:1px solid #CBD5E1;border-radius:999px;font-size:11px;font-weight:700;color:{tag_color};margin-bottom:10px;">{status_tag}</div>',
-            unsafe_allow_html=True,
-        )
-
-        st.markdown(
-            f'<div style="padding:14px 18px;background:#F8FAFC;border:1px solid #E2E8F0;border-left:4px solid {tag_color};border-radius:10px;max-height:520px;overflow-y:auto;font-size:13.5px;line-height:1.6;">',
-            unsafe_allow_html=True,
-        )
-        st.markdown(brief_text)
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # 3. Audited Past Guidance Incidents Ledger (The Historical Evidence)
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
