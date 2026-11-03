@@ -1,0 +1,17 @@
+{
+  "total_companies": 50,
+  "total_promises": 104,
+  "outcomes": {
+    "DELIVERED": 73,
+    "PARTIAL": 3,
+    "LATE": 3,
+    "MISSED": 11,
+    "REVISED_DOWN": 10,
+    "ABANDONED": 4
+  },
+  "base_rate": 78.4,
+  "top_delivery_ticker": "NVDA",
+  "top_delivery_score": 87.9,
+  "lowest_delivery_ticker": "BA",
+  "lowest_delivery_score": 57.6
+}
