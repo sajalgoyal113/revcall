@@ -19,8 +19,8 @@
 | **Grade B Companies (68–79)**| **11 Companies** | Moderate delivery or higher uncertainty (TSLA, MU, SNOW, COIN, SPOT, AMD) |
 | **Grade C Companies (55–67)**| **6 Companies** | Turnaround/distressed execution (BA, INTC, NKE, SBUX, TGT, BA) |
 | **Grade D / F (<55)** | **0 Companies** | No complete collapse across 50 titans |
-| **LOCO ROC-AUC** | **0.975** | Leave-One-Company-Out out-of-fold cross-validation (90% CI: [0.941, 0.998]) |
-| **LOCO Brier Score** | **0.087** | Substantial improvement over uninformative base rate (0.216) |
+| **Out-of-Sample ROC-AUC** | **0.775** | Out-of-sample stratified cross-validation (90% CI: [0.682, 0.869]) |
+| **Out-of-Sample Brier Score** | **0.160** | Substantial improvement over uninformative base rate (0.216) |
 | **60-Day Alpha Spread** | **+7.51%** | Top tercile Say-Do vs bottom tercile Say-Do post-earnings drift |
 | **Mean Rank IC** | **+0.142** | Spearman correlation between credibility score and 60-day abnormal return |
 

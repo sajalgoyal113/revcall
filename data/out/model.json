@@ -1,75 +1,75 @@
 {
-  "roc_auc": 0.975,
+  "roc_auc": 0.775,
   "roc_auc_ci90": [
-    0.941,
-    0.998
+    0.682,
+    0.869
   ],
-  "brier_score": 0.087,
+  "brier_score": 0.16,
   "base_brier": 0.216,
   "feature_weights": [
     {
-      "feature": "cat_kept_shrunk",
-      "weight": 8.759,
-      "impact": "Higher Probability Kept"
-    },
-    {
-      "feature": "ops_spread",
-      "weight": -4.308,
-      "impact": "Lower Probability Kept"
-    },
-    {
       "feature": "firm",
-      "weight": 1.431,
+      "weight": 1.646,
       "impact": "Higher Probability Kept"
-    },
-    {
-      "feature": "hedged_or_aspirational",
-      "weight": -0.725,
-      "impact": "Lower Probability Kept"
     },
     {
       "feature": "has_conditions",
-      "weight": -0.611,
+      "weight": -0.838,
+      "impact": "Lower Probability Kept"
+    },
+    {
+      "feature": "hedged_or_aspirational",
+      "weight": -0.754,
       "impact": "Lower Probability Kept"
     },
     {
       "feature": "grp_fin",
-      "weight": -0.398,
-      "impact": "Lower Probability Kept"
-    },
-    {
-      "feature": "grp_build",
-      "weight": 0.204,
-      "impact": "Higher Probability Kept"
-    },
-    {
-      "feature": "grp_commercial",
-      "weight": -0.172,
+      "weight": -0.393,
       "impact": "Lower Probability Kept"
     },
     {
       "feature": "horizon_q",
-      "weight": -0.137,
+      "weight": -0.216,
       "impact": "Lower Probability Kept"
     },
     {
+      "feature": "grp_build",
+      "weight": 0.166,
+      "impact": "Higher Probability Kept"
+    },
+    {
+      "feature": "grp_commercial",
+      "weight": -0.139,
+      "impact": "Lower Probability Kept"
+    },
+    {
+      "feature": "ops_spread",
+      "weight": 0.076,
+      "impact": "Higher Probability Kept"
+    },
+    {
+      "feature": "cat_kept_shrunk",
+      "weight": 0.071,
+      "impact": "Higher Probability Kept"
+    },
+    {
       "feature": "has_number",
-      "weight": 0.122,
+      "weight": 0.054,
       "impact": "Higher Probability Kept"
     },
     {
       "feature": "has_range",
-      "weight": 0.122,
+      "weight": 0.054,
       "impact": "Higher Probability Kept"
     },
     {
       "feature": "role_leader",
-      "weight": 0.022,
-      "impact": "Higher Probability Kept"
+      "weight": -0.045,
+      "impact": "Lower Probability Kept"
     },
     {
       "feature": "n_hedges",
-      "weight": -0.004,
+      "weight": -0.025,
       "impact": "Lower Probability Kept"
     },
     {
@@ -83,27 +83,27 @@
   "calibration": [
     {
       "bucket": "0-40%",
-      "predicted_mean": 29.8,
+      "predicted_mean": 35.4,
       "actual_held": 0.0,
-      "n": 13
+      "n": 6
     },
     {
       "bucket": "40-60%",
-      "predicted_mean": 50.5,
-      "actual_held": 6.7,
-      "n": 15
+      "predicted_mean": 46.6,
+      "actual_held": 0.0,
+      "n": 7
     },
     {
       "bucket": "60-80%",
-      "predicted_mean": 72.8,
-      "actual_held": 80.0,
-      "n": 15
+      "predicted_mean": 72.5,
+      "actual_held": 81.0,
+      "n": 63
     },
     {
       "bucket": "80-100%",
-      "predicted_mean": 86.8,
-      "actual_held": 98.4,
-      "n": 61
+      "predicted_mean": 84.9,
+      "actual_held": 78.6,
+      "n": 28
     }
   ]
 }

@@ -55,7 +55,7 @@ def main():
     print(f"  • Universe Base Rate         : {res['stats']['base_rate']}%")
     print(f"  • Maximum Say-Do Score       : {res['stats']['top_delivery_score']} ({res['stats']['top_delivery_ticker']}) [Strictly < 90]")
     print(f"  • Minimum Say-Do Score       : {res['stats']['lowest_delivery_score']} ({res['stats']['lowest_delivery_ticker']})")
-    print(f"  • LOCO ROC-AUC               : {res['model']['roc_auc']} (90% CI: {res['model']['roc_auc_ci90']})")
+    print(f"  • Out-of-Sample ROC-AUC      : {res['model']['roc_auc']} (90% CI: {res['model']['roc_auc_ci90']})")
     print(f"  • Brier Error Score          : {res['model']['brier_score']} (vs Base {res['model']['base_brier']})")
     print(f"  • 60-Day Alpha Spread        : +{res['market']['spread_pct']}%")
     print("=" * 78)

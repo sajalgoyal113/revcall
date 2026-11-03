@@ -445,7 +445,7 @@ with st.sidebar:
         st.markdown("---")
         st.markdown("**Out-of-Sample Benchmarks**")
         s1, s2 = st.columns(2)
-        s1.metric("LOCO AUC", f"{model.get('roc_auc', 0.975):.3f}")
+        s1.metric("Out-of-Sample AUC", f"{model.get('roc_auc', 0.775):.3f}")
         s2.metric("Brier Error", f"{model.get('brier_score', 0.087):.3f}")
         s3, s4 = st.columns(2)
         s3.metric("Alpha Spread", f"+{market.get('spread_pct', 7.51):.2f}%")
@@ -470,7 +470,7 @@ st.markdown(
     <div class="revcon-stat-chip"><div class="num">$35.4T</div><div class="lbl">Market Cap</div></div>
     <div class="revcon-stat-chip"><div class="num">{len(resolved)}</div><div class="lbl">Quotes Audited</div></div>
     <div class="revcon-stat-chip"><div class="num">+{market.get('spread_pct', 7.51):.2f}%</div><div class="lbl">60d Alpha</div></div>
-    <div class="revcon-stat-chip"><div class="num">{model.get('roc_auc', 0.975):.3f}</div><div class="lbl">LOCO AUC</div></div>
+    <div class="revcon-stat-chip"><div class="num">{model.get('roc_auc', 0.775):.3f}</div><div class="lbl">ROC AUC</div></div>
   </div>
 </div>
 """,
@@ -967,7 +967,7 @@ with tab_live:
 # ===========================================================================
 with tab_val:
     vk = st.columns(4, gap="medium")
-    render_kpi(vk[0], "LOCO ROC AUC", f"{model.get('roc_auc', 0.975):.3f}", f"90% CI: {model.get('roc_auc_ci90', [0.941, 0.998])}", COBALT)
+    render_kpi(vk[0], "Out-of-Sample ROC AUC", f"{model.get('roc_auc', 0.775):.3f}", f"90% CI: {model.get('roc_auc_ci90', [0.682, 0.869])}", COBALT)
     render_kpi(vk[1], "Brier Error Score", f"{model.get('brier_score', 0.087):.3f}", f"Beats base rate ({model.get('base_brier', 0.216):.3f})", EMERALD)
     render_kpi(vk[2], "60d Alpha Spread", f"+{market.get('spread_pct', 7.51):.2f}%", f"90% CI: {market.get('spread_ci90_pct', [5.11, 9.91])}%", "#0D9488")
     render_kpi(vk[3], "Rank Information Coeff", f"{market.get('mean_rank_ic', 0.490):.3f}", "Spearman rank correlation to 60d excess return", AMBER)

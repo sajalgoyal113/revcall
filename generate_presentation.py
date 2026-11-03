@@ -814,7 +814,7 @@ def generate_revcon_html(data):
         <div class="revcon-stat-chip"><div class="num">$35.4T</div><div class="lbl">Market Cap</div></div>
         <div class="revcon-stat-chip"><div class="num">{len(resolved_list)}</div><div class="lbl">Quotes Audited</div></div>
         <div class="revcon-stat-chip"><div class="num">+{market_obj.get('spread_pct', 5.74)}%</div><div class="lbl">60d Alpha</div></div>
-        <div class="revcon-stat-chip"><div class="num">{model_obj.get('roc_auc', 0.943):.3f}</div><div class="lbl">LOCO AUC</div></div>
+        <div class="revcon-stat-chip"><div class="num">{model_obj.get('roc_auc', 0.775):.3f}</div><div class="lbl">ROC AUC</div></div>
       </div>
     </div>
 
@@ -1426,9 +1426,9 @@ def generate_revcon_html(data):
     <section class="tab-content" id="tab_val">
       <div class="kpi-row">
         <div class="kpi-card" style="border-top: 3px solid var(--cobalt);">
-          <div class="kpi-label">LOCO ROC AUC</div>
-          <div class="kpi-val">{model_obj.get('roc_auc', 0.943):.3f}</div>
-          <div class="kpi-sub">90% CI: {model_obj.get('roc_auc_ci90', [0.918, 0.968])}</div>
+          <div class="kpi-label">Out-of-Sample ROC AUC</div>
+          <div class="kpi-val">{model_obj.get('roc_auc', 0.775):.3f}</div>
+          <div class="kpi-sub">90% CI: {model_obj.get('roc_auc_ci90', [0.682, 0.869])}</div>
         </div>
         <div class="kpi-card" style="border-top: 3px solid var(--emerald);">
           <div class="kpi-label">Brier Error Score</div>
@@ -1554,7 +1554,7 @@ def generate_revcon_html(data):
             <div class="kpi-card" style="border-top:3px solid #0D9488);">
               <div class="kpi-label">ML Accuracy</div>
               <div class="kpi-val">{model_obj.get('roc_auc', 0.943):.3f}</div>
-              <div class="kpi-sub">LOCO ROC AUC on unseen cos</div>
+              <div class="kpi-sub">Out-of-sample AUC on unseen cos</div>
             </div>
             <div class="kpi-card" style="border-top:3px solid var(--amber);">
               <div class="kpi-label">60-Day Alpha Spread</div>

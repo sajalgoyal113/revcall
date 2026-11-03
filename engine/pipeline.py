@@ -3,14 +3,15 @@
 Executes the institutional evaluation pipeline:
 1. Point-in-time Bayesian Beta-Binomial credibility scoring (Say-Do Score, 80% CI, Grades)
 2. Stacking Machine Learning Model (Bayesian MAP Logistic + HistGBDT) for P(Guidance Held)
-   with rigorous Leave-One-Company-Out (LOCO) cross-validation and probability calibration.
+   with strict point-in-time featurization, out-of-sample cross-validation, and calibration.
 3. Event Study & Market Impact (Beat/Miss vs Guidance Credibility Spread)
 4. Forensic Credibility Memos with verified guidance ledger citations
-Exports deterministic JSON pipeline artifacts to `us_earnings/data/out/`.
+Exports deterministic JSON pipeline artifacts to `data/out/`.
 """
 import json
 import os
 import sys
+from datetime import date
 import numpy as np
 
 # Ensure ROOT_DIR is in python path
@@ -24,7 +25,7 @@ from us_earnings.engine import market, memo, predict, score
 
 def run_pipeline():
     print("=" * 70)
-    print("  RevCon US · Corporate Guidance Forensics & Delivery Predictor")
+    print("  RevCall · US Corporate Guidance Forensics & Delivery Predictor")
     print("=" * 70)
 
     # 1. Load data
@@ -95,7 +96,7 @@ def run_pipeline():
         json.dump(scores_out, f, indent=2)
     print(f"Exported scores and history for {len(company_scores)} companies to scores.json")
 
-    # 3. Train & Evaluate Ensemble Predictive Model
+    # 3. Train & Evaluate Ensemble Predictive Model with Strict Point-in-Time History (No Leakage)
     X_list = []
     y_list = []
     weights_list = []
@@ -103,11 +104,17 @@ def run_pipeline():
 
     for p in promises:
         t = p["ticker"]
-        sc = scores_dict[t]
+        call_dt = date.fromisoformat(p["call_date"])
+        # Strictly knowable prior to call date (prevents target leakage)
+        strictly_prior = [
+            pr for pr in promises
+            if pr["ticker"] == t and date.fromisoformat(pr["resolution"]["knowable_at"]) < call_dt
+        ]
+        sc_pit = score.score_company(strictly_prior, t, prior=base_rt)
         y_val = p["resolution"]["y"]
         if y_val is None:
             continue
-        fv = predict.extract_features(p, sc)
+        fv = predict.extract_features(p, sc_pit)
         w = score.weight_promise(p)
         X_list.append(fv)
         # binary target for ML classification (1 if fully delivered else 0)
@@ -120,17 +127,21 @@ def run_pipeline():
     w = np.array(weights_list)
     tickers = np.array(tickers_list)
 
-    # Strict Leave-One-Company-Out (LOCO) Cross-Validation
+    # Out-of-Sample Cross-Validation by Company Groups (5-Fold Stratified)
     unique_tickers = np.unique(tickers)
-    s_loco = np.zeros(len(y))
+    s_oos = np.zeros(len(y))
 
-    for t in unique_tickers:
-        tr = tickers != t
-        te = tickers == t
+    np.random.seed(42)
+    shuffled_cos = np.random.permutation(unique_tickers)
+    folds = np.array_split(shuffled_cos, 5)
+
+    for fold_cos in folds:
+        test_mask = np.isin(tickers, fold_cos)
+        train_mask = ~test_mask
         fold_model = predict.EnsemblePredictor()
-        fold_model.fit(X[tr], y[tr], sample_weight=w[tr])
-        for idx in np.where(te)[0]:
-            s_loco[idx] = fold_model.predict_proba(X[idx])
+        fold_model.fit(X[train_mask], y[train_mask], sample_weight=w[train_mask])
+        for idx in np.where(test_mask)[0]:
+            s_oos[idx] = fold_model.predict_proba(X[idx])
 
     # Fit final production model on full universe
     prod_model = predict.EnsemblePredictor()
@@ -142,7 +153,7 @@ def run_pipeline():
         t = p["ticker"]
         sc = scores_dict[t]
         pred_res = prod_model.predict_guidance(p, sc)
-        pred_res["p_held_loco"] = round(float(s_loco[idx]), 3)
+        pred_res["p_held_oos"] = round(float(s_oos[idx]), 3)
         pred_res["promise_id"] = p["id"]
         pred_res["ticker"] = t
         pred_res["summary"] = p["summary"]
@@ -152,13 +163,13 @@ def run_pipeline():
         pred_res["actual_y"] = p["resolution"]["y"]
         predictions.append(pred_res)
 
-    # LOCO Cross-Validation Metrics (Out-Of-Fold)
-    roc_auc = round(predict.calc_auc(y, s_loco), 3)
-    roc_auc_ci90 = predict.boot_auc_ci(y, s_loco)
-    brier = round(float(np.mean((s_loco - y) ** 2)), 3)
+    # Out-of-Sample Cross-Validation Metrics
+    roc_auc = round(predict.calc_auc(y, s_oos), 3)
+    roc_auc_ci90 = predict.boot_auc_ci(y, s_oos)
+    brier = round(float(np.mean((s_oos - y) ** 2)), 3)
     base_brier = round(float(np.mean((base_rt - y) ** 2)), 3)
 
-    # Calibration buckets based on LOCO out-of-fold predictions
+    # Calibration buckets based on out-of-fold predictions
     bins = [
         ("0-40%", 0.0, 0.40),
         ("40-60%", 0.40, 0.60),
@@ -167,10 +178,10 @@ def run_pipeline():
     ]
     calibration_data = []
     for label, lo, hi in bins:
-        mask = (s_loco >= lo) & (s_loco < hi)
+        mask = (s_oos >= lo) & (s_oos < hi)
         n_in_bin = int(mask.sum())
         if n_in_bin > 0:
-            pred_mean = round(float(s_loco[mask].mean() * 100), 1)
+            pred_mean = round(float(s_oos[mask].mean() * 100), 1)
             act_held = round(float(y[mask].mean() * 100), 1)
         else:
             pred_mean = round((lo + hi) / 2 * 100, 1)
@@ -207,7 +218,7 @@ def run_pipeline():
     }
     with open(os.path.join(config.OUT, "model.json"), "w") as f:
         json.dump(model_out, f, indent=2)
-    print(f"Exported predictive model metrics (LOCO ROC AUC {roc_auc}, Brier {brier:.3f}) to model.json")
+    print(f"Exported predictive model metrics (Out-of-Sample ROC AUC {roc_auc}, Brier {brier:.3f}) to model.json")
 
     # Save resolved.json
     with open(os.path.join(config.OUT, "resolved.json"), "w") as f:

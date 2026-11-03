@@ -4,7 +4,7 @@ Combines:
 1. Calibrated Bayesian MAP Logistic Regression with domain shrinkage and L2 regularization.
 2. Pure-NumPy HistGBDT Classifier (self-contained, zero-sklearn dependency, JSON serializable).
 Predicts P(Guidance Held) and outputs Credibility-Adjusted Guidance targets.
-Includes out-of-fold Leave-One-Company-Out (LOCO) cross-validation and probability calibration.
+Includes out-of-sample cross-validation and probability calibration.
 """
 import math
 import re

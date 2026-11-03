@@ -23,7 +23,7 @@ Every quarterly earnings season, institutional investors anchor on forward manag
 - **Audited Universe:** 50 premier US companies across Mega-Cap Tech (Mag 7), Semiconductors, Enterprise Software, Consumer Internet, Retail, and Wall Street Finance.
 - **Commitments Audited:** 104 verbatim-verified guidance promises resolved against subsequent Form 10-Q / Form 10-K reported results.
 - **Strict Scoring Hygiene:** Bayesian Beta-Binomial shrinkage ($\kappa = 6.0$, empirical base rate $78.4\%$). **Zero companies score $\ge 90$** (top score is NVDA at 87.9, Grade A).
-- **Predictive ML Accuracy:** **0.975 LOCO ROC-AUC** (90% CI [0.941, 0.998]) and **0.087 Brier Error Score** (beating uninformative base rate 0.216) using an out-of-fold Stacking Ensemble (Bayesian MAP Logistic Regression + HistGBDT Classifier).
+- **Predictive ML Accuracy:** **0.775 Out-of-Sample ROC-AUC** (90% CI [0.682, 0.869]) and **0.160 Brier Error Score** (beating uninformative base rate 0.216) using an out-of-sample Stacking Ensemble (Bayesian MAP Logistic Regression + HistGBDT Classifier).
 - **Market Alpha:** **+7.51% 60-day post-earnings abnormal return spread** (Say-Do Top Tercile vs Bottom Tercile; Rank IC = 0.490).
 
 ---
