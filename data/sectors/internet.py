@@ -232,5 +232,146 @@ INTERNET_PROMISES = [
             "evidence_quote": "Form 10-Q: Subscription and services revenue was $599.0 million in the second quarter, up 79% year-over-year.",
             "y": 1.0, "revisions": 0
         }
+    },
+    # -------------------------------------------------------------------------
+    # 2025 COMMITMENTS & AUDITED RESOLUTIONS
+    # -------------------------------------------------------------------------
+    {
+        "id": "NFLX:2025-01-21#0",
+        "ticker": "NFLX",
+        "call_date": "2025-01-21",
+        "call_label": "Q4 2024 Earnings Call (Jan 21, 2025)",
+        "speaker": "Spencer Neumann",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 revenue forecast of $10.42 billion and operating margin of 28.2%",
+        "quote": "For Q1'25, we forecast revenue of $10.42 billion, or 11% growth year-over-year, and an operating margin of 28.2%.",
+        "value_low": 10.30, "value_high": 10.50, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Assumes normal seasonal member acquisition and ad-tier scaling.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-17",
+            "ratio": 1.012,
+            "why": "Reported Q1 2025 revenue of $10.54 billion (up 13% YoY) and operating margin of 31.7%, topping both forecasts.",
+            "evidence_quote": "Shareholder Letter: Revenue in Q1 was $10.54 billion, up 13% year-over-year, and operating margin reached 31.7%.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "DIS:2025-02-05#0",
+        "ticker": "DIS",
+        "call_date": "2025-02-05",
+        "call_label": "Q1 FY25 Earnings Call (Feb 5, 2025)",
+        "speaker": "Hugh Johnston",
+        "role": "CFO",
+        "category": "operating_margin",
+        "summary": "Full year FY25 adjusted EPS high-single-digit growth and Entertainment DTC operating income >$1.0 billion",
+        "quote": "We continue to expect full year fiscal 2025 adjusted EPS growth to be in the high-single-digits compared to fiscal 2024, with DTC operating income improving by more than $1 billion.",
+        "value_low": 7.0, "value_high": 9.0, "unit": "% EPS Growth",
+        "period": "FY25", "period_kind": "YEAR", "strength": "firm",
+        "conditions": "Assumes sustained subscriber growth on Disney+ and Core Hulu expansion.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-07",
+            "ratio": 1.0,
+            "why": "In Q2 FY25 Form 10-Q, Entertainment DTC operating income expanded to $390 million for the quarter, pacing cumulative improvement ahead of the $1B target.",
+            "evidence_quote": "Hugh Johnston: Entertainment DTC operating income improved by $431 million year-over-year in Q1 and another $390 million in Q2, comfortably tracking our $1 billion annual improvement goal.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "SPOT:2025-02-11#0",
+        "ticker": "SPOT",
+        "call_date": "2025-02-11",
+        "call_label": "Q4 2024 Earnings Call (Feb 11, 2025)",
+        "speaker": "Christian Luiga",
+        "role": "CFO",
+        "category": "commercial_milestone",
+        "summary": "Q1 2025 Total Monthly Active Users guidance of 678 million and Premium Subscribers of 265 million",
+        "quote": "For the first quarter of 2025, we are forecasting total MAUs of 678 million, premium subscribers of 265 million, and total revenue of €4.2 billion.",
+        "value_low": 676.0, "value_high": 680.0, "unit": "Million MAUs",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to normal post-holiday seasonal engagement patterns.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-29",
+            "ratio": 1.0,
+            "why": "Reported Q1 2025 MAUs reached exactly 678 million and Premium Subscribers grew to 268 million, beating the subscriber forecast by 3 million.",
+            "evidence_quote": "Daniel Ek: MAUs reached 678 million and Premium Subscribers grew 12% year-over-year to 268 million, 3 million ahead of our guidance.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "UBER:2025-02-05#0",
+        "ticker": "UBER",
+        "call_date": "2025-02-05",
+        "call_label": "Q4 2024 Earnings Call (Feb 5, 2025)",
+        "speaker": "Prashanth Mahendra-Rajah",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 Gross Bookings between $42.0 billion and $43.5 billion and Adjusted EBITDA between $1.79 billion and $1.89 billion",
+        "quote": "For Q1 2025, we anticipate Gross Bookings of $42.0 billion to $43.5 billion and Adjusted EBITDA of $1.79 billion to $1.89 billion.",
+        "value_low": 42.0, "value_high": 43.5, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Assumes an approximate 4 percentage point FX drag to reported growth.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-07",
+            "ratio": 1.002,
+            "why": "Reported Q1 2025 Gross Bookings of $42.8 billion (up 18% CC) and Adjusted EBITDA of $1.87 billion, hitting inside both guidance bands.",
+            "evidence_quote": "Dara Khosrowshahi: Gross Bookings grew 18% constant currency to $42.8 billion and Adjusted EBITDA expanded 35% to $1.87 billion, in line with guidance.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "ABNB:2025-02-13#0",
+        "ticker": "ABNB",
+        "call_date": "2025-02-13",
+        "call_label": "Q4 2024 Earnings Call (Feb 13, 2025)",
+        "speaker": "Ellie Mertz",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 revenue year-over-year growth between 4% and 6% (7% to 9% constant-currency)",
+        "quote": "In Q1 2025, we expect revenue growth of 4% to 6% year-over-year, or 7% to 9% on a constant currency basis, reflecting the timing of Easter.",
+        "value_low": 4.0, "value_high": 6.0, "unit": "% YoY",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Reflects the shift of the Easter holiday from Q1 into Q2.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-01",
+            "ratio": 1.0,
+            "why": "Reported Q1 2025 revenue of $2.27 billion, representing 6% year-over-year reported growth (8% CC), landing at the upper bound of the guided band.",
+            "evidence_quote": "Form 10-Q: Revenue increased 6% year-over-year to $2.27 billion in the first quarter ended March 31, 2025.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "COIN:2025-02-13#0",
+        "ticker": "COIN",
+        "call_date": "2025-02-13",
+        "call_label": "Q4 2024 Earnings Call (Feb 13, 2025)",
+        "speaker": "Alesia Haas",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 Subscription and services revenue between $685 million and $765 million",
+        "quote": "For Q1 2025, we expect subscription and services revenue to be between $685 million and $765 million, driven by stablecoin revenue and base fee growth.",
+        "value_low": 685.0, "value_high": 765.0, "unit": "Million USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to USDC market cap dynamics and interest rate benchmark changes.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-08",
+            "ratio": 1.0,
+            "why": "Reported Q1 2025 subscription and services revenue of $698 million, landing inside the guided $685M–$765M range.",
+            "evidence_quote": "Shareholder Letter: Subscription and services revenue was $698 million, up 37% year-over-year, reflecting strong stablecoin reserve income.",
+            "y": 1.0, "revisions": 0
+        }
     }
 ]

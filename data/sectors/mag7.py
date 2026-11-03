@@ -282,12 +282,12 @@ MAG7_PROMISES = [
         "conditions": "Dependent on model safety audits and private cloud compute infrastructure readiness.",
         "verifiable_by": "disclosure",
         "resolution": {
-            "outcome": "DELIVERED",
+            "outcome": "PARTIAL",
             "knowable_at": "2024-10-28",
-            "ratio": 1.0,
-            "why": "Apple Intelligence officially launched on October 28, 2024 as part of iOS 18.1 release.",
-            "evidence_quote": "Apple Newsroom (Oct 28, 2024): Apple Intelligence is available today for iPhone, iPad, and Mac users through a free software update with the release of iOS 18.1.",
-            "y": 1.0, "revisions": 0
+            "ratio": 0.70,
+            "why": "Initial writing tools and summaries launched with iOS 18.1 on Oct 28, but core on-screen Siri overhaul, deep app actions, and multilingual support were delayed to iOS 18.4 in spring 2025.",
+            "evidence_quote": "Tim Cook: We launched the first set of Apple Intelligence features in U.S. English with iOS 18.1, while additional personalized Siri features will roll out throughout 2025.",
+            "y": 0.5, "revisions": 1
         }
     },
     {
@@ -672,6 +672,239 @@ MAG7_PROMISES = [
             "why": "Vehicle deliveries peaked in 2023 at 1.81M and declined to 1.79M in 2024 (-1% YoY), failing to sustain the 50% compound target by a wide margin.",
             "evidence_quote": "Form 10-K: Total vehicle deliveries were 1,789,226 in 2024 compared to 1,808,581 in 2023.",
             "y": 0.0, "revisions": 2
+        }
+    },
+    # -------------------------------------------------------------------------
+    # 2025 COMMITMENTS & AUDITED RESOLUTIONS
+    # -------------------------------------------------------------------------
+    {
+        "id": "NVDA:2025-02-26#0",
+        "ticker": "NVDA",
+        "call_date": "2025-02-26",
+        "call_label": "Q4 FY25 Earnings Call (Feb 26, 2025)",
+        "speaker": "Colette Kress",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 FY26 Revenue guidance of $43.0 billion plus or minus 2%",
+        "quote": "Revenue is expected to be $43.0 billion, plus or minus 2%. We expect Data Center growth across both compute and networking.",
+        "value_low": 42.14, "value_high": 43.86, "unit": "Billion USD",
+        "period": "Q1 FY26", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to wafer allocation and packaging availability.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-28",
+            "ratio": 1.025,
+            "why": "Reported Q1 FY26 revenue of $44.06 billion, exceeding guided midpoint ($43.0B) by 2.5%.",
+            "evidence_quote": "Colette Kress: Q1 revenue was a record $44.06 billion, up 12% sequentially and up 69% year-on-year.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "NVDA:2025-02-26#1",
+        "ticker": "NVDA",
+        "call_date": "2025-02-26",
+        "call_label": "Q4 FY25 Earnings Call (Feb 26, 2025)",
+        "speaker": "Colette Kress",
+        "role": "CFO",
+        "category": "gross_margin",
+        "summary": "Q1 FY26 GAAP gross margin guidance of 70.6% plus or minus 50 bps",
+        "quote": "GAAP and non-GAAP gross margins are expected to be 70.6% and 71.0%, respectively, plus or minus 50 basis points.",
+        "value_low": 70.1, "value_high": 71.1, "unit": "%",
+        "period": "Q1 FY26", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to product mix transition to Blackwell.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "MISSED",
+            "knowable_at": "2025-05-28",
+            "ratio": 0.857,
+            "why": "Reported Q1 FY26 GAAP gross margin plunged to 60.5% (non-GAAP 61.0%) due to an unexpected $4.5B inventory impairment related to US export restrictions on China-specific GPUs.",
+            "evidence_quote": "Form 10-Q: GAAP gross margin was 60.5%, primarily impacted by a $4.5 billion inventory charge for excess and obsolete H20 components following export restriction updates.",
+            "y": 0.0, "revisions": 1
+        }
+    },
+    {
+        "id": "MSFT:2025-01-29#0",
+        "ticker": "MSFT",
+        "call_date": "2025-01-29",
+        "call_label": "Q2 FY25 Earnings Call (Jan 29, 2025)",
+        "speaker": "Amy Hood",
+        "role": "CFO",
+        "category": "segment_guidance",
+        "summary": "Q3 FY25 Azure revenue growth of 31% to 32% in constant currency",
+        "quote": "In Azure, we expect Q3 revenue growth to be between 31% and 32% in constant currency driven by strong demand for our portfolio of services.",
+        "value_low": 31.0, "value_high": 32.0, "unit": "% CC",
+        "period": "Q3 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to AI capacity delivery timing and commercial execution.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-30",
+            "ratio": 1.048,
+            "why": "Reported Q3 FY25 Azure and cloud services constant-currency revenue growth of 33% (with 16 points from AI services), beating the top end of guidance.",
+            "evidence_quote": "Amy Hood: Azure and other cloud services revenue grew 33% and 35% in constant currency, ahead of our expectations.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "AAPL:2025-01-30#0",
+        "ticker": "AAPL",
+        "call_date": "2025-01-30",
+        "call_label": "Q1 FY25 Earnings Call (Jan 30, 2025)",
+        "speaker": "Kevan Parekh",
+        "role": "CFO",
+        "category": "gross_margin",
+        "summary": "Q2 FY25 Gross Margin guidance between 46.5% and 47.5%",
+        "quote": "We expect gross margin to be between 46.5% and 47.5%. We expect operating expenses to be between $15.1 billion and $15.3 billion.",
+        "value_low": 46.5, "value_high": 47.5, "unit": "%",
+        "period": "Q2 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to foreign exchange fluctuations and product mix.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-01",
+            "ratio": 1.002,
+            "why": "Reported Q2 FY25 gross margin of 47.1% in Form 10-Q, squarely inside the guided 46.5%–47.5% range.",
+            "evidence_quote": "Form 10-Q: Gross margin was $44.9 billion, representing a gross margin percentage of 47.1%.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "AAPL:2025-01-30#1",
+        "ticker": "AAPL",
+        "call_date": "2025-01-30",
+        "call_label": "Q1 FY25 Earnings Call (Jan 30, 2025)",
+        "speaker": "Kevan Parekh",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q2 FY25 total company revenue year-over-year growth in the low-to-mid single digits",
+        "quote": "We expect March quarter revenue to grow year-over-year in the low-to-mid single digits, with Services growing at a similar rate to the December quarter.",
+        "value_low": 2.0, "value_high": 5.0, "unit": "% YoY",
+        "period": "Q2 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to foreign exchange headwinds of approximately 1.5 percentage points.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-01",
+            "ratio": 1.02,
+            "why": "Reported Q2 FY25 revenue of $95.4 billion, up 5.1% YoY from $90.75B in Q2 FY24, delivering right at the top of low-to-mid single digits.",
+            "evidence_quote": "Tim Cook: Today Apple is reporting revenue of $95.4 billion for the March quarter, up 5 percent from a year ago.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "GOOGL:2025-02-04#0",
+        "ticker": "GOOGL",
+        "call_date": "2025-02-04",
+        "call_label": "Q4 2024 Earnings Call (Feb 4, 2025)",
+        "speaker": "Sundar Pichai",
+        "role": "CEO",
+        "category": "capex_target",
+        "summary": "Full year 2025 capital expenditures investment of approximately $75 billion",
+        "quote": "We are confident about the opportunities ahead, and to accelerate our progress, we expect to invest approximately $75 billion in capital expenditures in 2025.",
+        "value_low": 70.0, "value_high": 80.0, "unit": "Billion USD",
+        "period": "FY2025", "period_kind": "YEAR", "strength": "firm",
+        "conditions": "Primarily technical infrastructure for AI servers and datacenter capacity.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-24",
+            "ratio": 1.0,
+            "why": "Form 10-Q for Q1 2025 showed capex of $17.2 billion, maintaining strict pacing toward the guided $75B full-year technical infrastructure plan.",
+            "evidence_quote": "Anat Ashkenazi: CapEx in the first quarter was $17.2 billion, in line with our full year expectation of approximately $75 billion.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "AMZN:2025-02-06#0",
+        "ticker": "AMZN",
+        "call_date": "2025-02-06",
+        "call_label": "Q4 2024 Earnings Call (Feb 6, 2025)",
+        "speaker": "Brian Olsavsky",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 net sales between $151.0 billion and $155.5 billion",
+        "quote": "Net sales are expected to be between $151.0 billion and $155.5 billion, or to grow between 5% and 9% compared with first quarter 2024.",
+        "value_low": 151.0, "value_high": 155.5, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Anticipates an unfavorable FX impact of ~210 bps.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-01",
+            "ratio": 1.001,
+            "why": "Reported Q1 2025 net sales of $155.7 billion, topping the upper end of the $151.0B–$155.5B guidance range.",
+            "evidence_quote": "Form 10-Q: Net sales increased 9% to $155.7 billion in the first quarter, compared with $143.3 billion in first quarter 2024.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "AMZN:2025-02-06#1",
+        "ticker": "AMZN",
+        "call_date": "2025-02-06",
+        "call_label": "Q4 2024 Earnings Call (Feb 6, 2025)",
+        "speaker": "Brian Olsavsky",
+        "role": "CFO",
+        "category": "operating_margin",
+        "summary": "Q1 2025 operating income between $14.0 billion and $18.0 billion",
+        "quote": "Operating income is expected to be between $14.0 billion and $18.0 billion, compared with $15.3 billion in first quarter 2024.",
+        "value_low": 14.0, "value_high": 18.0, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": None,
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-01",
+            "ratio": 1.022,
+            "why": "Reported Q1 2025 operating income of $18.4 billion, beating the top end of the guided range ($18.0B) driven by AWS margin expansion.",
+            "evidence_quote": "Form 10-Q: Operating income was $18.4 billion for the first quarter, compared with operating income of $15.3 billion in first quarter 2024.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "META:2025-01-29#0",
+        "ticker": "META",
+        "call_date": "2025-01-29",
+        "call_label": "Q4 2024 Earnings Call (Jan 29, 2025)",
+        "speaker": "Susan Li",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 total revenue between $39.5 billion and $41.8 billion",
+        "quote": "We expect first quarter 2025 total revenue to be in the range of $39.5-41.8 billion. Our guidance assumes foreign currency is a 2% headwind.",
+        "value_low": 39.5, "value_high": 41.8, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Assumes foreign currency is an approximate 2% headwind to total revenue growth.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-30",
+            "ratio": 1.012,
+            "why": "Reported Q1 2025 total revenue of $42.31 billion, surpassing the upper bound of guidance ($41.8B) by $510 million.",
+            "evidence_quote": "Susan Li: Total revenue in Q1 was $42.3 billion, up 16% year-over-year, or 18% on a constant currency basis, above our guidance range.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "TSLA:2025-01-29#0",
+        "ticker": "TSLA",
+        "call_date": "2025-01-29",
+        "call_label": "Q4 2024 Earnings Call (Jan 29, 2025)",
+        "speaker": "Elon Musk",
+        "role": "CEO",
+        "category": "delivery_target",
+        "summary": "Full year 2025 vehicle delivery volume growth of 20% to 30%",
+        "quote": "Our best guess is that vehicle growth will be 20% to 30% this year, driven by lower cost models and the rollout of autonomous features.",
+        "value_low": 20.0, "value_high": 30.0, "unit": "%",
+        "period": "FY2025", "period_kind": "YEAR", "strength": "aspirational",
+        "conditions": "Dependent on manufacturing ramp of refreshed Model Y and low-cost vehicle production lines.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "REVISED_DOWN",
+            "knowable_at": "2025-04-22",
+            "ratio": 0.50,
+            "why": "Q1 2025 deliveries dropped 13% YoY to 336,681 units. On the Q1 call (Apr 22, 2025), management walked back the 20-30% volume guidance.",
+            "evidence_quote": "Elon Musk: We faced significant downtime for Model Y refresh changeovers in Q1, and volume growth for the year will likely be lower than the 20% target.",
+            "y": 0.25, "revisions": 1
         }
     }
 ]

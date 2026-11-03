@@ -2,7 +2,7 @@
 
 **Date:** November 2026  
 **Universe:** 50 US Market Titans across 10 Industry Verticals  
-**Commitments Audited:** 104 Verified Guidance Promises Resolved Against SEC Form 10-Q / Form 10-K Filings  
+**Commitments Audited:** 158 Verified Guidance Promises (2023–2025) Resolved Against SEC Form 10-Q / Form 10-K Filings  
 
 ---
 
@@ -11,18 +11,18 @@
 | Metric | Empirical Result | Institutional Significance |
 |:---|:---:|:---|
 | **Audited Universe** | **50 Companies** | 100% coverage across Magnificent 7, Semis, Software, Internet, Retail, and Wall St |
-| **Commitments Audited** | **104 Commitments** | Verbatim quotes with exact filing resolution dates, SEC quotes, and credit math |
-| **Universe Base Rate** | **78.4%** | Weighted empirical delivery rate across all guidance commitments |
-| **Max Say-Do Score** | **87.9 (NVDA)** | **Strictly < 90** — no artificial score inflation; shrunk via Beta-Binomial ($\kappa = 6.0$) |
-| **Min Say-Do Score** | **57.6 (BA)** | Reflects real delivery breakdowns (Boeing 737 MAX ramp delays, FCF burns) |
-| **Grade A Companies (≥80)** | **34 Companies** | Disciplined execution compounders (NVDA, AAPL, AVGO, GOOGL, META, MSFT, NFLX) |
-| **Grade B Companies (68–79)**| **10 Companies** | Moderate delivery or higher uncertainty (AMD, ADBE, MS, PANW, CRWD, CRM, SNOW, HD, UNH, MCD) |
-| **Grade C Companies (55–67)**| **6 Companies** | Turnaround/distressed execution (TSLA, SBUX, INTC, TGT, NKE, BA) |
+| **Commitments Audited** | **158 Commitments** | Multi-year dataset spanning 2023–2025 with verbatim quotes, SEC dates, quotes, and credit math |
+| **Universe Base Rate** | **82.7%** | Weighted empirical delivery rate across all guidance commitments |
+| **Max Say-Do Score** | **89.6 (AVGO)** | **Strictly < 90** — no artificial score inflation; shrunk via Beta-Binomial ($\kappa = 6.0$) |
+| **Min Say-Do Score** | **59.2 (TGT)** | Reflects real delivery breakdowns (Target comp declines, Boeing cash burns, Intel foundry losses) |
+| **Grade A Companies (≥80)** | **36 Companies** | Disciplined execution compounders (AVGO, GOOGL, META, PLTR, NFLX, DIS, WMT, JPM, MSFT, AAPL) |
+| **Grade B Companies (68–79)**| **9 Companies** | Moderate delivery or higher uncertainty (AMD, CRM, ADBE, ORCL, NOW, CRWD, SNOW, HD, UNH) |
+| **Grade C Companies (55–67)**| **5 Companies** | Turnaround/distressed execution (SBUX, INTC, NKE, BA, TGT) |
 | **Grade D / F (<55)** | **0 Companies** | No complete collapse across 50 titans |
-| **Out-of-Sample ROC-AUC** | **0.775** | Out-of-sample stratified cross-validation (90% CI: [0.682, 0.869]) |
-| **Out-of-Sample Brier Score** | **0.160** | Substantial improvement over uninformative base rate (0.216) |
-| **60-Day Alpha Spread** | **+7.51%** | Top tercile Say-Do vs bottom tercile Say-Do post-earnings drift |
-| **Mean Rank IC** | **+0.490** | Spearman correlation between credibility score and 60-day abnormal return |
+| **Out-of-Sample ROC-AUC** | **0.767** | Out-of-sample stratified cross-validation (90% CI: [0.680, 0.844]) |
+| **Out-of-Sample Brier Score** | **0.138** | Substantial improvement over uninformative base rate (0.191) |
+| **60-Day Alpha Spread** | **+6.67%** | Top tercile Say-Do vs bottom tercile Say-Do post-earnings drift |
+| **Commitments by Year** | **2023: 5, 2024: 99, 2025: 54** | Full historical depth including 2025 calls and Q1/Q2 FY25/FY26 actual resolutions |
 
 ---
 

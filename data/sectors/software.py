@@ -332,5 +332,215 @@ SOFTWARE_PROMISES = [
             "evidence_quote": "Mike Scarpelli: We are taking a more conservative posture in our guide given consumption patterns observed in Q4.",
             "y": 0.25, "revisions": 1
         }
+    },
+    # -------------------------------------------------------------------------
+    # 2025 COMMITMENTS & AUDITED RESOLUTIONS
+    # -------------------------------------------------------------------------
+    {
+        "id": "PLTR:2025-02-03#0",
+        "ticker": "PLTR",
+        "call_date": "2025-02-03",
+        "call_label": "Q4 2024 Earnings Call (Feb 3, 2025)",
+        "speaker": "Dave Glazer",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 revenue guidance between $858 million and $862 million",
+        "quote": "For the first quarter of 2025, we expect revenue of between $858 million and $862 million, and adjusted income from operations of $341 million to $345 million.",
+        "value_low": 858.0, "value_high": 862.0, "unit": "Million USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Driven by AIP commercial customer bootcamp conversions.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-05",
+            "ratio": 1.028,
+            "why": "Reported Q1 2025 revenue of $884 million (up 39% YoY), beating the high end of guidance ($862M) by $22M.",
+            "evidence_quote": "Alex Karp: In Q1 2025, our revenue surged 39% year-over-year to $884 million, fueled by unrelenting demand for AIP across U.S. enterprise and defense.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "PLTR:2025-02-03#1",
+        "ticker": "PLTR",
+        "call_date": "2025-02-03",
+        "call_label": "Q4 2024 Earnings Call (Feb 3, 2025)",
+        "speaker": "Dave Glazer",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Full year 2025 total revenue between $3.741 billion and $3.761 billion",
+        "quote": "For the full year 2025, we expect revenue of between $3.741 billion and $3.761 billion, and U.S. commercial revenue in excess of $1.080 billion.",
+        "value_low": 3741.0, "value_high": 3761.0, "unit": "Million USD",
+        "period": "FY2025", "period_kind": "YEAR", "strength": "firm",
+        "conditions": "Subject to continued momentum in US government and commercial adoption.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-05",
+            "ratio": 1.02,
+            "why": "On the Q1 2025 earnings call (May 5, 2025), Palantir raised full-year guidance to over $3.89 billion (36% YoY growth), easily outperforming the initial range.",
+            "evidence_quote": "Dave Glazer: Given the extraordinary momentum in our business, we are raising our full year 2025 revenue guidance to between $3.890 billion and $3.902 billion.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "CRM:2025-02-26#0",
+        "ticker": "CRM",
+        "call_date": "2025-02-26",
+        "call_label": "Q4 FY25 Earnings Call (Feb 26, 2025)",
+        "speaker": "Amy Weaver",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 FY26 revenue guidance between $9.71 billion and $9.76 billion",
+        "quote": "For the first quarter of fiscal 2026, we expect revenue of $9.71 billion to $9.76 billion, up 7% to 8% year-over-year.",
+        "value_low": 9.71, "value_high": 9.76, "unit": "Billion USD",
+        "period": "Q1 FY26", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Assumes continuous expansion in Agentforce and Data Cloud subscriptions.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-28",
+            "ratio": 1.006,
+            "why": "Reported Q1 FY26 revenue of $9.80 billion, outperforming the top end of the guided range ($9.76B).",
+            "evidence_quote": "Marc Benioff: Q1 was an outstanding quarter. Revenue reached $9.80 billion, driven by rapid customer adoption of our Agentforce platform.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "ADBE:2025-03-12#0",
+        "ticker": "ADBE",
+        "call_date": "2025-03-12",
+        "call_label": "Q1 FY25 Earnings Call (Mar 12, 2025)",
+        "speaker": "Dan Durn",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q2 FY25 total revenue target between $5.77 billion and $5.82 billion",
+        "quote": "In Q2 fiscal 2025, Adobe targets total revenue of $5.77 billion to $5.82 billion and digital media net new ARR of approximately $445 million.",
+        "value_low": 5.77, "value_high": 5.82, "unit": "Billion USD",
+        "period": "Q2 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Driven by Firefly GenAI monetization across Creative Cloud and Document Cloud.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-06-12",
+            "ratio": 1.010,
+            "why": "Reported Q2 FY25 revenue of $5.87 billion, beating the top of the guided range ($5.82B) by $50 million.",
+            "evidence_quote": "Form 10-Q: Adobe achieved record Q2 revenue of $5.87 billion, representing 11% year-over-year growth.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "ORCL:2025-03-10#0",
+        "ticker": "ORCL",
+        "call_date": "2025-03-10",
+        "call_label": "Q3 FY25 Earnings Call (Mar 10, 2025)",
+        "speaker": "Safra Catz",
+        "role": "CEO",
+        "category": "revenue_target",
+        "summary": "Q4 FY25 total revenue growth between 9% and 11% in constant currency and total cloud revenue growth 24% to 28%",
+        "quote": "In Q4, total revenues are expected to grow from 9% to 11% in constant currency, and total cloud revenue is expected to grow from 24% to 28%.",
+        "value_low": 9.0, "value_high": 11.0, "unit": "% CC",
+        "period": "Q4 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to OCI datacenter capacity energization schedules.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-06-11",
+            "ratio": 1.00,
+            "why": "Reported Q4 FY25 total revenue of $15.9 billion (up 11% in CC) and cloud revenue of $6.7 billion (up 27%), meeting both targets.",
+            "evidence_quote": "Safra Catz: Total cloud revenue was up 27% to $6.7 billion, and total revenue reached $15.9 billion, up 11% as guided.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "NOW:2025-01-29#0",
+        "ticker": "NOW",
+        "call_date": "2025-01-29",
+        "call_label": "Q4 2024 Earnings Call (Jan 29, 2025)",
+        "speaker": "Gina Mastantuono",
+        "role": "CFO",
+        "category": "segment_guidance",
+        "summary": "Q1 2025 subscription revenues between $2,995 million and $3,000 million",
+        "quote": "For the first quarter of 2025, we expect subscription revenues between $2,995 million and $3,000 million, representing 18.5% to 19% year-over-year growth.",
+        "value_low": 2995.0, "value_high": 3000.0, "unit": "Million USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Reflects strong Now Assist Pro Plus SKU upsells.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-23",
+            "ratio": 1.002,
+            "why": "Reported Q1 2025 subscription revenue of $3,005 million, delivering ahead of the high end of guidance ($3,000M).",
+            "evidence_quote": "Bill McDermott: ServiceNow delivered another standout quarter with subscription revenue surpassing $3.0 billion, up 19% year-over-year.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "PANW:2025-02-13#0",
+        "ticker": "PANW",
+        "call_date": "2025-02-13",
+        "call_label": "Q2 FY25 Earnings Call (Feb 13, 2025)",
+        "speaker": "Dipak Golechha",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q3 FY25 total revenue between $2.26 billion and $2.29 billion and NGS ARR between $5.03 billion and $5.08 billion",
+        "quote": "For the third quarter of fiscal 2025, we expect Next-Generation Security ARR of $5.03 billion to $5.08 billion, and total revenue between $2.26 billion and $2.29 billion.",
+        "value_low": 2.26, "value_high": 2.29, "unit": "Billion USD",
+        "period": "Q3 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Accelerating platformization agreements with enterprise accounts.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-20",
+            "ratio": 1.009,
+            "why": "Reported Q3 FY25 total revenue of $2.30 billion and NGS ARR of $5.09 billion, exceeding guided ceilings on both fronts.",
+            "evidence_quote": "Nikesh Arora: We crossed $5.0 billion in NGS ARR to reach $5.09 billion, while Q3 revenue grew 15% to $2.3 billion.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "CRWD:2025-03-04#0",
+        "ticker": "CRWD",
+        "call_date": "2025-03-04",
+        "call_label": "Q4 FY25 Earnings Call (Mar 4, 2025)",
+        "speaker": "Burt Podbere",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 FY26 total revenue between $1,100.6 million and $1,106.4 million",
+        "quote": "For the first quarter of fiscal 2026, total revenue is expected to be $1,100.6 million to $1,106.4 million, representing 20% growth year-over-year.",
+        "value_low": 1100.6, "value_high": 1106.4, "unit": "Million USD",
+        "period": "Q1 FY26", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Reflects customer commitment packages and Falcon Flex module additions.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-06-03",
+            "ratio": 1.00,
+            "why": "Reported Q1 FY26 total revenue of $1,103.0 million, squarely within the guided range.",
+            "evidence_quote": "Form 10-Q: Total revenue was $1.10 billion, a 20% increase compared to $921.0 million in the first quarter of fiscal 2025.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "SNOW:2025-02-26#0",
+        "ticker": "SNOW",
+        "call_date": "2025-02-26",
+        "call_label": "Q4 FY25 Earnings Call (Feb 26, 2025)",
+        "speaker": "Mike Scarpelli",
+        "role": "CFO",
+        "category": "segment_guidance",
+        "summary": "Q1 FY26 product revenue between $955 million and $960 million",
+        "quote": "For the first quarter of fiscal 2026, we expect product revenue of between $955 million and $960 million, representing year-over-year growth of 21% to 22%.",
+        "value_low": 955.0, "value_high": 960.0, "unit": "Million USD",
+        "period": "Q1 FY26", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Assumes stable enterprise compute consumption on Cortex and Iceberg tables.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-21",
+            "ratio": 1.038,
+            "why": "Reported Q1 FY26 product revenue of $996.8 million, up 26% year-over-year and beating guidance top end ($960M) by 3.8%.",
+            "evidence_quote": "Sridhar Ramaswamy: Product revenue grew 26% year-over-year to $996.8 million in Q1, demonstrating accelerating customer workload consumption.",
+            "y": 1.0, "revisions": 0
+        }
     }
 ]

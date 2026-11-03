@@ -1,14 +1,14 @@
 {
   "events_count": 150,
   "companies_count": 50,
-  "top_tercile_excess_pct": 5.69,
-  "bottom_tercile_excess_pct": -1.81,
-  "spread_pct": 7.51,
+  "top_tercile_excess_pct": 5.41,
+  "bottom_tercile_excess_pct": -1.26,
+  "spread_pct": 6.67,
   "spread_ci90_pct": [
-    5.11,
-    9.91
+    4.27,
+    9.07
   ],
-  "mean_rank_ic": 0.49,
+  "mean_rank_ic": 0.459,
   "event_trajectory": {
     "days": [
       -5,

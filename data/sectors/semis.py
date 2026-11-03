@@ -443,5 +443,169 @@ SEMIS_PROMISES = [
             "evidence_quote": "Haviv Ilan: While industrial grew sequentially in Q3, automotive customer inventory reductions accelerated and are continuing.",
             "y": 0.5, "revisions": 1
         }
+    },
+    # -------------------------------------------------------------------------
+    # 2025 COMMITMENTS & AUDITED RESOLUTIONS
+    # -------------------------------------------------------------------------
+    {
+        "id": "AMD:2025-02-04#0",
+        "ticker": "AMD",
+        "call_date": "2025-02-04",
+        "call_label": "Q4 2024 Earnings Call (Feb 4, 2025)",
+        "speaker": "Jean Hu",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 revenue of approximately $7.1 billion plus or minus $300 million",
+        "quote": "For the first quarter of 2025, AMD expects revenue to be approximately $7.1 billion, plus or minus $300 million.",
+        "value_low": 6.80, "value_high": 7.40, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to data center MI300 ramp and seasonal client trends.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-06",
+            "ratio": 1.047,
+            "why": "Reported Q1 2025 revenue of $7.438 billion, exceeding the high end of the guided range ($7.4B) driven by EPYC server and GPU demand.",
+            "evidence_quote": "Jean Hu: First quarter revenue was $7.44 billion, up 36% year-over-year, driven by record Data Center segment revenue.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "INTC:2025-01-30#0",
+        "ticker": "INTC",
+        "call_date": "2025-01-30",
+        "call_label": "Q4 2024 Earnings Call (Jan 30, 2025)",
+        "speaker": "David Zinsner",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 revenue guidance between $11.7 billion and $12.7 billion with non-GAAP breakeven EPS",
+        "quote": "For the first quarter of 2025, we expect revenue of $11.7 billion to $12.7 billion, with gross margin of 36.5% GAAP and 39.5% non-GAAP.",
+        "value_low": 11.70, "value_high": 12.70, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to normal client seasonality and inventory rebalancing.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "REVISED_DOWN",
+            "knowable_at": "2025-04-24",
+            "ratio": 0.50,
+            "why": "Although Q1 revenue hit $12.67B, GAAP net loss widened to $(0.19) and management revised Q2 guidance down to $11.2B–$12.4B with breakeven non-GAAP EPS, cutting annual foundry projections.",
+            "evidence_quote": "Form 10-Q: GAAP net loss was $(0.8) billion and diluted EPS was $(0.19). For Q2 2025, Intel lowered expected revenue to $11.2 billion to $12.4 billion.",
+            "y": 0.25, "revisions": 1
+        }
+    },
+    {
+        "id": "AVGO:2025-03-06#0",
+        "ticker": "AVGO",
+        "call_date": "2025-03-06",
+        "call_label": "Q1 FY25 Earnings Call (Mar 6, 2025)",
+        "speaker": "Hock Tan",
+        "role": "CEO",
+        "category": "revenue_target",
+        "summary": "Q2 FY25 revenue guidance of approximately $14.9 billion",
+        "quote": "Second quarter fiscal year 2025 revenue guidance is approximately $14.9 billion, representing an anticipated increase of 19% compared to the prior year period.",
+        "value_low": 14.60, "value_high": 15.20, "unit": "Billion USD",
+        "period": "Q2 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Driven by AI semiconductor networking solutions and VMware software integration.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-06-05",
+            "ratio": 1.007,
+            "why": "Reported Q2 FY25 net revenue of $15.004 billion and AI revenue exceeding $4.4 billion, beating guided midpoint.",
+            "evidence_quote": "Hock Tan: Net revenue grew 20% year-over-year to a record $15.0 billion, underpinned by continued strength in AI semiconductor solutions.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "QCOM:2025-02-05#0",
+        "ticker": "QCOM",
+        "call_date": "2025-02-05",
+        "call_label": "Q1 FY25 Earnings Call (Feb 5, 2025)",
+        "speaker": "Akash Palkhiwala",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q2 FY25 GAAP revenues between $10.3 billion and $11.2 billion",
+        "quote": "In the second quarter of fiscal 2025, we are forecasting revenues of $10.3 billion to $11.2 billion, with QCT revenues between $8.9 billion and $9.5 billion.",
+        "value_low": 10.30, "value_high": 11.20, "unit": "Billion USD",
+        "period": "Q2 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to handset launch timing across Chinese OEMs and automotive ramp.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-01",
+            "ratio": 1.023,
+            "why": "Reported Q2 FY25 revenues of $11.0 billion, up 17% year-over-year, well inside guided upper tier.",
+            "evidence_quote": "Form 10-Q: Total revenues were $11.0 billion in Q2 FY25 compared to $9.39 billion in the prior year period.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "MU:2025-03-20#0",
+        "ticker": "MU",
+        "call_date": "2025-03-20",
+        "call_label": "Q2 FY25 Earnings Call (Mar 20, 2025)",
+        "speaker": "Mark Murphy",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q3 FY25 revenue guidance of $8.8 billion plus or minus $200 million",
+        "quote": "For the third quarter of fiscal 2025, we expect revenue of $8.8 billion, plus or minus $200 million, and non-GAAP gross margin of 36.5% plus or minus 100 bps.",
+        "value_low": 8.60, "value_high": 9.00, "unit": "Billion USD",
+        "period": "Q3 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Driven by HBM3E pricing, volume shipments, and data center SSD demand.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-06-25",
+            "ratio": 1.057,
+            "why": "Reported Q3 FY25 revenue of $9.30 billion, beating the top end of the guided range ($9.0B) due to sold-out HBM capacity.",
+            "evidence_quote": "Sanjay Mehrotra: Micron delivered fiscal Q3 revenue of $9.30 billion, driven by robust AI demand and strong execution across DRAM and NAND.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "AMAT:2025-02-13#0",
+        "ticker": "AMAT",
+        "call_date": "2025-02-13",
+        "call_label": "Q1 FY25 Earnings Call (Feb 13, 2025)",
+        "speaker": "Brice Hill",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q2 FY25 net revenue of approximately $7.10 billion plus or minus $400 million",
+        "quote": "In the second quarter of fiscal 2025, Applied expects net revenue to be approximately $7.10 billion, plus or minus $400 million.",
+        "value_low": 6.70, "value_high": 7.50, "unit": "Billion USD",
+        "period": "Q2 FY25", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Subject to leading-edge foundry logic spending and packaging deliveries.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-05-15",
+            "ratio": 1.0,
+            "why": "Reported Q2 FY25 net revenue of exactly $7.100 billion, hitting the guided midpoint on the dot.",
+            "evidence_quote": "Form 10-Q: Net revenue for the second quarter ended April 27, 2025 was $7,100 million, up 7% year-over-year.",
+            "y": 1.0, "revisions": 0
+        }
+    },
+    {
+        "id": "TXN:2025-01-23#0",
+        "ticker": "TXN",
+        "call_date": "2025-01-23",
+        "call_label": "Q4 2024 Earnings Call (Jan 23, 2025)",
+        "speaker": "Rafael Lizardi",
+        "role": "CFO",
+        "category": "revenue_target",
+        "summary": "Q1 2025 revenue in the range of $3.74 billion to $4.06 billion",
+        "quote": "TI's outlook for first-quarter 2025 is for revenue in the range of $3.74 billion to $4.06 billion, and earnings per share between $0.94 and $1.16.",
+        "value_low": 3.74, "value_high": 4.06, "unit": "Billion USD",
+        "period": "Q1 2025", "period_kind": "QUARTER", "strength": "firm",
+        "conditions": "Assumes bottoming industrial order patterns and gradual channel restock.",
+        "verifiable_by": "financials",
+        "resolution": {
+            "outcome": "DELIVERED",
+            "knowable_at": "2025-04-22",
+            "ratio": 1.002,
+            "why": "Reported Q1 2025 revenue of $4.069 billion, delivering right at the top edge of the guided $3.74B–$4.06B band.",
+            "evidence_quote": "Form 10-Q: First quarter revenue was $4,069 million, an increase of 11% compared to the prior-year period.",
+            "y": 1.0, "revisions": 0
+        }
     }
 ]

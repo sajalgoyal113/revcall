@@ -1,17 +1,17 @@
 {
   "total_companies": 50,
-  "total_promises": 104,
+  "total_promises": 158,
   "outcomes": {
-    "DELIVERED": 73,
-    "PARTIAL": 3,
+    "DELIVERED": 119,
+    "PARTIAL": 5,
     "LATE": 3,
-    "MISSED": 11,
-    "REVISED_DOWN": 10,
-    "ABANDONED": 4
+    "MISSED": 13,
+    "REVISED_DOWN": 13,
+    "ABANDONED": 5
   },
-  "base_rate": 78.4,
-  "top_delivery_ticker": "NVDA",
-  "top_delivery_score": 87.9,
-  "lowest_delivery_ticker": "BA",
-  "lowest_delivery_score": 57.6
+  "base_rate": 82.7,
+  "top_delivery_ticker": "AVGO",
+  "top_delivery_score": 89.6,
+  "lowest_delivery_ticker": "TGT",
+  "lowest_delivery_score": 59.2
 }
